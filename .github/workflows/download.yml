@@ -37,3 +37,6 @@ jobs:
 
       - name: Commit any changes
         uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Automated Change
+          commit_options: '--no-verify --allow-empty'        
