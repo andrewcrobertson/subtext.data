@@ -1,8 +1,6 @@
 import AdmZip from 'adm-zip';
-import fs from 'fs';
+import { endsWith } from 'lodash';
 import path from 'path';
-import { pipeline } from 'stream';
-import { promisify } from 'util';
 import type { SearchResult, Subtitle } from '../../types/Subdl';
 import { parseSrt, SubtitleBlock } from '../utils/parseSrt';
 
@@ -43,34 +41,19 @@ export class SubdlManager {
   }
 
   private async getSubtitleInfo(subtitle: Subtitle) {
-    fs.mkdirSync(this.stagingDir, { recursive: true });
-
-    const basename = path.basename(subtitle.url);
-    const id = path.parse(basename).name;
-    const zipFilePath = path.resolve(this.stagingDir, basename);
-    const extractFilePath = path.resolve(this.stagingDir, id);
-
-    if (!fs.existsSync(zipFilePath)) {
-      const url = `${zipUrl}${subtitle.url}`;
-      const response = await fetch(url);
-      const fileStream = fs.createWriteStream(zipFilePath);
-      await promisify(pipeline)(response.body as unknown as NodeJS.ReadableStream, fileStream);
-    }
-
-    const zip = new AdmZip(zipFilePath);
-    zip.extractAllTo(extractFilePath, true);
-
     const subtitles: { author: string; zipFile: string; srtFile: string; subtitles: SubtitleBlock[] }[] = [];
-    const files = await fs.promises.readdir(extractFilePath);
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const fullPath = path.join(extractFilePath, file);
 
-      if (path.extname(file) === '.srt') {
-        const content = await fs.promises.readFile(fullPath, 'utf-8');
-        subtitles.push({ author: subtitle.author, zipFile: basename, srtFile: file, subtitles: parseSrt(content) });
+    const url = `${zipUrl}${subtitle.url}`;
+    const response = await fetch(url);
+    const arrayBuffer = await response.arrayBuffer();
+    const zip = new AdmZip(Buffer.from(arrayBuffer));
+    const zipEntries = zip.getEntries();
+    zipEntries.forEach((entry) => {
+      if (!entry.isDirectory && endsWith(entry.entryName, '.srt')) {
+        const content = entry.getData().toString();
+        subtitles.push({ author: subtitle.author, zipFile: path.basename(url), srtFile: entry.entryName, subtitles: parseSrt(content) });
       }
-    }
+    });
 
     return subtitles;
   }
