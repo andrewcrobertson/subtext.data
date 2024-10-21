@@ -10,7 +10,7 @@ import { OmdbManager } from '../services/OmdbManager';
 import { SubdlManager } from '../services/SubdlManager';
 import { getPkgMeta } from '../utils/getPkgMeta';
 
-const gitHubUrl = 'https://api.gitHub.com/repos/andrewcrobertson/subtext';
+const gitHubUrl = 'https://api.gitHub.com/repos/andrewcrobertson/subtext.data';
 const gitHubPublicToken = 'XYI7o6X0coQhlmoCNPrBmZSDZtZOti4LGCBs';
 
 const pkgMeta = getPkgMeta(rootDir);
