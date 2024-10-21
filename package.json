@@ -13,7 +13,7 @@
     "dev:app": "pnpm run -r --workspace-concurrency 1 dev",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
     "prepare": "husky",
-    "script:download": "pnpm --filter \"download\" dev --output ../../__data__",
+    "script:download": "pnpm --filter \"download\" dev --data-dir ../../packages/app/src/lib/server.data --poster-dir ../../packages/app/static/posters",
     "test": "pnpm run -r --workspace-concurrency 1 test"
   },
   "devDependencies": {

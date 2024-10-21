@@ -1,4 +1,4 @@
-import tt0099487 from '$lib/data/tt0099487.json';
+import tt0099487 from '$lib/server.data/tt0099487.json';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {

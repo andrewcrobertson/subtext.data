@@ -23,13 +23,13 @@ export class Downloader {
     this.logger.infoOpenGitHubIssuesFound(openIssues.length);
     for (let i = 0; i < openIssues.length; i++) {
       const issue = openIssues[i];
-      await this.process(dataDir, issue.gitHubIssueNumber, issue.imdbId);
+      await this.process(dataDir, posterDir, issue.gitHubIssueNumber, issue.imdbId);
     }
 
     this.logger.infoBlank();
   }
 
-  private async process(dataDir: string, gitHubIssueNumber: number, imdbId: string) {
+  private async process(dataDir: string, posterDir: string, gitHubIssueNumber: number, imdbId: string) {
     const gitHubComments: string[] = [];
 
     const omdbInfo = await this.omdbManager.getInfo(imdbId);
@@ -58,11 +58,11 @@ export class Downloader {
 
     const ext = path.parse(path.basename(omdbInfo.poster)).ext;
     const response = await fetch(omdbInfo.poster);
-    const fileStream = fs.createWriteStream(path.resolve(dataDir, 'posters', `${imdbId}${ext}`));
+    const fileStream = fs.createWriteStream(path.resolve(posterDir, `${imdbId}${ext}`));
     await promisify(pipeline)(response.body as unknown as NodeJS.ReadableStream, fileStream);
 
     const movie = { ...subdlInfo, ...omdbInfo, poster: `posters/${imdbId}${ext}` };
-    fs.writeFileSync(path.resolve(dataDir, 'data', `${imdbId}.json`), JSON.stringify(movie, null, 2));
+    fs.writeFileSync(path.resolve(dataDir, `${imdbId}.json`), JSON.stringify(movie, null, 2));
 
     await this.gitHubApi.addComment(gitHubIssueNumber, join(gitHubComments, '\n'));
     await this.gitHubApi.close(gitHubIssueNumber);
