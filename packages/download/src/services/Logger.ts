@@ -47,6 +47,10 @@ export class Logger {
     this.logWarn(`Subtitles not found`);
   }
 
+  public errorMessage(message: string) {
+    this.logError(message);
+  }
+
   // public errorInvalidFileArgsInputFileNotExist(inputFile: string) {
   //   this.logError(`Could not find input file ${this.formatPath(inputFile)}`);
   // }
