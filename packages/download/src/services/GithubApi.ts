@@ -4,7 +4,7 @@ const titlePrefix = 'Add: ';
 
 export class GithubApi {
   public constructor(
-    private readonly url: string,
+    private readonly apiUrlBase: string,
     private readonly token: string
   ) {}
 
@@ -31,7 +31,7 @@ export class GithubApi {
   }
 
   private async get(urlPath: string) {
-    const url = `${this.url}${urlPath}`;
+    const url = `${this.apiUrlBase}${urlPath}`;
     const headers = { Authorization: `token ${this.token}`, Accept: 'application/vnd.gitHub.v3+json' };
     const response = await fetch(url, { headers });
     const json = await response.json();
@@ -39,7 +39,7 @@ export class GithubApi {
   }
 
   private async patch(urlPath: string, body: any) {
-    const url = `${this.url}${urlPath}`;
+    const url = `${this.apiUrlBase}${urlPath}`;
     const headers = { Authorization: `token ${this.token}`, Accept: 'application/vnd.gitHub.v3+json' };
     const response = await fetch(url, { method: 'PATCH', headers, body: JSON.stringify(body) });
     const json = await response.json();
@@ -47,7 +47,7 @@ export class GithubApi {
   }
 
   private async post(urlPath: string, body: any) {
-    const url = `${this.url}${urlPath}`;
+    const url = `${this.apiUrlBase}${urlPath}`;
     const headers = { Authorization: `token ${this.token}`, Accept: 'application/vnd.gitHub.v3+json' };
     const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) });
     const json = await response.json();

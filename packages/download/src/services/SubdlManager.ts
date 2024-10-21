@@ -4,13 +4,11 @@ import path from 'path';
 import type { SearchResult, Subtitle } from '../../types/Subdl';
 import { parseSrt, SubtitleBlock } from '../utils/parseSrt';
 
-const zipUrl = `https://dl.subdl.com`;
-const apiUrl = `https://api.subdl.com/api/v1/subtitles`;
-
 export class SubdlManager {
   public constructor(
-    private readonly apiKey: string,
-    private readonly stagingDir: string
+    private readonly apiUrlBase: string,
+    private readonly subdlZipUrlBase: string,
+    private readonly apiKey: string
   ) {}
 
   public async getInfo(imdbId: string) {
@@ -35,7 +33,7 @@ export class SubdlManager {
   }
 
   private async fetchSubdlInfo(imdbId: string) {
-    const response = await fetch(`${apiUrl}?api_key=${this.apiKey}&imdb_id=${imdbId}&type=movie&languages=EN`);
+    const response = await fetch(`${this.apiUrlBase}?api_key=${this.apiKey}&imdb_id=${imdbId}&type=movie&languages=EN`);
     const json: SearchResult = await response.json();
     return json;
   }
@@ -43,7 +41,7 @@ export class SubdlManager {
   private async getSubtitleInfo(subtitle: Subtitle) {
     const subtitles: { author: string; zipFile: string; srtFile: string; subtitles: SubtitleBlock[] }[] = [];
 
-    const url = `${zipUrl}${subtitle.url}`;
+    const url = `${this.subdlZipUrlBase}${subtitle.url}`;
     const response = await fetch(url);
     const arrayBuffer = await response.arrayBuffer();
     const zip = new AdmZip(Buffer.from(arrayBuffer));
