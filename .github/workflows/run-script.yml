@@ -30,10 +30,6 @@ jobs:
           git fetch origin data
           git checkout -b data origin/data || git checkout data
 
-      - name: Copy output to data branch
-        run: |
-          cp -r output/* .
-
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
