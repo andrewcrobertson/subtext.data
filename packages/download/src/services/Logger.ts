@@ -51,8 +51,16 @@ export class Logger {
   //   this.logError(`Could not find input file ${this.formatPath(inputFile)}`);
   // }
 
-  public errorInvalidFileArgsOutput() {
-    this.logError(`Please pass in an output`);
+  public errorInvalidDataDirAndPosterDirArgsOutput() {
+    this.logError(`Please include ${green('data-dir')} and ${green('poster-dir')} args`);
+  }
+
+  public errorInvalidDataDirArgsOutput() {
+    this.logError(`Please include a ${green('data-dir')} arg`);
+  }
+
+  public errorInvalidPosterDirArgsOutput() {
+    this.logError(`Please include a ${green('poster-dir')} arg`);
   }
 
   public infoFinished() {

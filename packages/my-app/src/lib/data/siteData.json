@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "slug": "introduction-to-svelte",
+    "title": "Introduction to Svelte",
+    "content": "Svelte is a new way to build user interfaces. It's a framework that shifts much of the work to compile time, creating highly optimized JavaScript code that updates the DOM efficiently."
+  },
+  {
+    "id": 2,
+    "slug": "getting-started-with-sveltekit",
+    "title": "Getting Started with SvelteKit",
+    "content": "SvelteKit is a framework for building web applications using Svelte. It provides a lot of functionality out of the box, including routing, data loading, and static site generation."
+  },
+  {
+    "id": 3,
+    "slug": "static-site-generation-with-sveltekit",
+    "title": "Static Site Generation with SvelteKit",
+    "content": "SvelteKit makes static site generation easy. By using the adapter-static package, you can build a fully static site that can be deployed to platforms like Netlify or Vercel."
+  }
+]
