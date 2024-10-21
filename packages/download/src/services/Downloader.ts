@@ -82,8 +82,4 @@ export class Downloader {
     await this.gitHubApi.addComment(gitHubIssueNumber, join(gitHubComments, '\n'));
     await this.gitHubApi.close(gitHubIssueNumber);
   }
-
-  private async exists(imdbId: string) {
-    return false;
-  }
 }
