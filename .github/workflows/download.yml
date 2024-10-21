@@ -32,10 +32,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run 'download' script from package.json
+      - name: Download
         run: pnpm run script:download
 
-      - name: Commit any changes
+      - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Automated Change

@@ -23,24 +23,28 @@ export class Logger {
     this.logInfo(`${green(openIssueCount)} open ${issueP11n} found`);
   }
 
-  public infoProcessingOpenGitHubIssue(gitHubIssueNumber: number, imdbId: string) {
-    this.logInfo(`GH ${green(gitHubIssueNumber)}/IMDB ${green(imdbId)} - processing`);
+  public infoTitle(title: string) {
+    this.logInfo(magenta(`=== ${title} ===`));
   }
 
-  public infoMovieMetadataFound(gitHubIssueNumber: number, imdbId: string, title: string) {
-    this.logInfo(`GH ${green(gitHubIssueNumber)}/IMDB ${green(imdbId)} - ${green(title)} metadata found`);
+  public infoProcessing(gitHubIssueNumber: number, imdbId: string) {
+    this.logInfo(`GitHub issue ${green(gitHubIssueNumber)}, IMDB id ${green(imdbId)}`);
   }
 
-  public infoMovieMetadataNotFound(gitHubIssueNumber: number, imdbId: string, title: string) {
-    this.logInfo(`GH ${green(gitHubIssueNumber)}/IMDB ${green(imdbId)} - ${green(title)} metadata not found`);
+  public infoMovieMetadataFound() {
+    this.logInfo(`Metadata found`);
   }
 
-  public infoMovieSubtitlesFound(gitHubIssueNumber: number, imdbId: string, title: string) {
-    this.logInfo(`GH ${green(gitHubIssueNumber)}/IMDB ${green(imdbId)} - ${green(title)} subtitles found`);
+  public infoMovieMetadataNotFound() {
+    this.logWarn(`Metadata not found`);
   }
 
-  public infoMovieSubtitlesNotFound(gitHubIssueNumber: number, imdbId: string, title: string) {
-    this.logInfo(`GH ${green(gitHubIssueNumber)}/IMDB ${green(imdbId)} - ${green(title)} subtitles not found`);
+  public infoMovieSubtitlesFound() {
+    this.logInfo(`Subtitles found`);
+  }
+
+  public infoMovieSubtitlesNotFound() {
+    this.logWarn(`Subtitles not found`);
   }
 
   // public errorInvalidFileArgsInputFileNotExist(inputFile: string) {

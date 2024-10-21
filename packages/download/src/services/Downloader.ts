@@ -30,43 +30,39 @@ export class Downloader {
   }
 
   private async process(outputDir: string, gitHubIssueNumber: number, imdbId: string) {
-    this.logger.infoProcessingOpenGitHubIssue(gitHubIssueNumber, imdbId);
-
     const gitHubComments: string[] = [];
 
-    if (await this.exists(imdbId)) {
-      await this.gitHubApi.tagAsDuplicate(gitHubIssueNumber);
+    const omdbInfo = await this.omdbManager.getInfo(imdbId);
+    const subdlInfo = await this.subdlManager.getInfo(imdbId);
+    const title = omdbInfo.title ?? subdlInfo.title ?? 'Unknown Title';
+
+    this.logger.infoTitle(title);
+    this.logger.infoProcessing(gitHubIssueNumber, imdbId);
+    gitHubComments.push(`**${title}**`);
+
+    if (omdbInfo) {
+      this.logger.infoMovieMetadataFound();
+      gitHubComments.push(`:heavy_check_mark: Metadata found`);
     } else {
-      const omdbInfo = await this.omdbManager.getInfo(imdbId);
-      const subdlInfo = await this.subdlManager.getInfo(imdbId);
-
-      const title = omdbInfo.title ?? subdlInfo.title ?? 'Unknown Title';
-      gitHubComments.push(`**${title}**`);
-
-      if (omdbInfo) {
-        this.logger.infoMovieMetadataFound(gitHubIssueNumber, imdbId, title);
-        gitHubComments.push(`:heavy_check_mark: Metadata found`);
-      } else {
-        this.logger.infoMovieMetadataNotFound(gitHubIssueNumber, imdbId, title);
-        gitHubComments.push(`:heavy_multiplication_x: Metadata not found`);
-      }
-
-      if (subdlInfo.options.length > 0) {
-        this.logger.infoMovieSubtitlesFound(gitHubIssueNumber, imdbId, title);
-        gitHubComments.push(`:heavy_check_mark: Subtitles found`);
-      } else {
-        this.logger.infoMovieSubtitlesNotFound(gitHubIssueNumber, imdbId, title);
-        gitHubComments.push(`:heavy_multiplication_x: Subtitles not found`);
-      }
-
-      const ext = path.parse(path.basename(omdbInfo.poster)).ext;
-      const response = await fetch(omdbInfo.poster);
-      const fileStream = fs.createWriteStream(path.resolve(outputDir, 'posters', `${imdbId}${ext}`));
-      await promisify(pipeline)(response.body as unknown as NodeJS.ReadableStream, fileStream);
-
-      const movie = { ...subdlInfo, ...omdbInfo, poster: `posters/${imdbId}${ext}` };
-      fs.writeFileSync(path.resolve(outputDir, 'data', `${imdbId}.json`), JSON.stringify(movie, null, 2));
+      this.logger.infoMovieMetadataNotFound();
+      gitHubComments.push(`:heavy_multiplication_x: Metadata not found`);
     }
+
+    if (subdlInfo.options.length > 0) {
+      this.logger.infoMovieSubtitlesFound();
+      gitHubComments.push(`:heavy_check_mark: Subtitles found`);
+    } else {
+      this.logger.infoMovieSubtitlesNotFound();
+      gitHubComments.push(`:heavy_multiplication_x: Subtitles not found`);
+    }
+
+    const ext = path.parse(path.basename(omdbInfo.poster)).ext;
+    const response = await fetch(omdbInfo.poster);
+    const fileStream = fs.createWriteStream(path.resolve(outputDir, 'posters', `${imdbId}${ext}`));
+    await promisify(pipeline)(response.body as unknown as NodeJS.ReadableStream, fileStream);
+
+    const movie = { ...subdlInfo, ...omdbInfo, poster: `posters/${imdbId}${ext}` };
+    fs.writeFileSync(path.resolve(outputDir, 'data', `${imdbId}.json`), JSON.stringify(movie, null, 2));
 
     await this.gitHubApi.addComment(gitHubIssueNumber, join(gitHubComments, '\n'));
     await this.gitHubApi.close(gitHubIssueNumber);
