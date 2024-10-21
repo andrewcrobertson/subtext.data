@@ -20,14 +20,10 @@ export class Downloader {
     this.logger.infoStarting();
     const openIssues = await this.gitHubApi.getOpenIssues('add');
 
-    if (openIssues.length === 0) {
-      this.logger.infoOpenGitHubIssuesNotFound();
-    } else {
-      this.logger.infoOpenGitHubIssuesFound(openIssues.length);
-      for (let i = 0; i < openIssues.length; i++) {
-        const issue = openIssues[i];
-        await this.process(outputDir, issue.gitHubIssueNumber, issue.imdbId);
-      }
+    this.logger.infoOpenGitHubIssuesFound(openIssues.length);
+    for (let i = 0; i < openIssues.length; i++) {
+      const issue = openIssues[i];
+      await this.process(outputDir, issue.gitHubIssueNumber, issue.imdbId);
     }
 
     this.logger.infoBlank();
@@ -48,18 +44,18 @@ export class Downloader {
       gitHubComments.push(`**${title}**`);
 
       if (omdbInfo) {
-        this.logger.infoMovieMetadataFound(imdbId, title);
+        this.logger.infoMovieMetadataFound(gitHubIssueNumber, imdbId, title);
         gitHubComments.push(`:heavy_check_mark: Metadata found`);
       } else {
-        this.logger.infoMovieMetadataNotFound(imdbId);
+        this.logger.infoMovieMetadataNotFound(gitHubIssueNumber, imdbId, title);
         gitHubComments.push(`:heavy_multiplication_x: Metadata not found`);
       }
 
       if (subdlInfo.options.length > 0) {
-        this.logger.infoMovieSubtitlesFound(imdbId);
+        this.logger.infoMovieSubtitlesFound(gitHubIssueNumber, imdbId, title);
         gitHubComments.push(`:heavy_check_mark: Subtitles found`);
       } else {
-        this.logger.infoMovieSubtitlesNotFound(imdbId);
+        this.logger.infoMovieSubtitlesNotFound(gitHubIssueNumber, imdbId, title);
         gitHubComments.push(`:heavy_multiplication_x: Subtitles not found`);
       }
 

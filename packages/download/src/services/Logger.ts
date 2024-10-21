@@ -18,32 +18,29 @@ export class Logger {
     this.logInfo(magenta('=== Starting ==='));
   }
 
-  public infoOpenGitHubIssuesNotFound() {
-    this.logInfo(`No open issues found`);
-  }
-
   public infoOpenGitHubIssuesFound(openIssueCount: number) {
-    this.logInfo(`${green(openIssueCount)} open issues found`);
+    const issueP11n = openIssueCount > 1 ? 'issues' : 'issue';
+    this.logInfo(`${green(openIssueCount)} open ${issueP11n} found`);
   }
 
   public infoProcessingOpenGitHubIssue(gitHubIssueNumber: number, imdbId: string) {
-    this.logInfo(`Processing GitHub Issue ${green(gitHubIssueNumber)} / IMDB Id ${green(imdbId)} `);
+    this.logInfo(`GH ${green(gitHubIssueNumber)}/IMDB ${green(imdbId)} - processing`);
   }
 
-  public infoMovieMetadataFound(imdbId: string, title: string) {
-    this.logInfo(`Found movie metadata for IMDB Id ${green(imdbId)}: ${green(title)}`);
+  public infoMovieMetadataFound(gitHubIssueNumber: number, imdbId: string, title: string) {
+    this.logInfo(`GH ${green(gitHubIssueNumber)}/IMDB ${green(imdbId)} - ${green(title)} metadata found`);
   }
 
-  public infoMovieMetadataNotFound(imdbId: string) {
-    this.logWarn(`Could not find movie metadata with IMDB Id ${green(imdbId)}`);
+  public infoMovieMetadataNotFound(gitHubIssueNumber: number, imdbId: string, title: string) {
+    this.logInfo(`GH ${green(gitHubIssueNumber)}/IMDB ${green(imdbId)} - ${green(title)} metadata not found`);
   }
 
-  public infoMovieSubtitlesFound(imdbId: string) {
-    this.logInfo(`Found movie subtitles for IMDB Id ${green(imdbId)}`);
+  public infoMovieSubtitlesFound(gitHubIssueNumber: number, imdbId: string, title: string) {
+    this.logInfo(`GH ${green(gitHubIssueNumber)}/IMDB ${green(imdbId)} - ${green(title)} subtitles found`);
   }
 
-  public infoMovieSubtitlesNotFound(imdbId: string) {
-    this.logWarn(`Could not find movie subtitles for IMDB Id ${green(imdbId)}`);
+  public infoMovieSubtitlesNotFound(gitHubIssueNumber: number, imdbId: string, title: string) {
+    this.logInfo(`GH ${green(gitHubIssueNumber)}/IMDB ${green(imdbId)} - ${green(title)} subtitles not found`);
   }
 
   // public errorInvalidFileArgsInputFileNotExist(inputFile: string) {
