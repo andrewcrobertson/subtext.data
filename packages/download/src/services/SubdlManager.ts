@@ -1,8 +1,22 @@
 import AdmZip from 'adm-zip';
-import { endsWith } from 'lodash';
+import { endsWith, get, toPairs } from 'lodash';
 import path from 'path';
 import type { SearchResult, Subtitle } from '../../types/Subdl';
 import { parseSrt, SubtitleBlock } from '../utils/parseSrt';
+
+const errOutput = { success: false, data: null };
+
+export interface Info {
+  success: boolean;
+  data: {
+    imdbId: string;
+    title: string | null;
+    releaseDate: string | null;
+    year: number | null;
+    options: any[];
+  };
+  errors: Error[];
+}
 
 export class SubdlManager {
   public constructor(
@@ -12,47 +26,91 @@ export class SubdlManager {
   ) {}
 
   public async getInfo(imdbId: string) {
-    const options: any[] = [];
-    const subdlInfo = await this.fetchSubdlInfo(imdbId);
+    const output: Info = { success: false, data: { imdbId, title: null, releaseDate: null, year: null, options: [] }, errors: [] };
 
-    if (subdlInfo.status) {
-      for (let i = 0; i < subdlInfo.subtitles.length; i++) {
-        const subtitle = subdlInfo.subtitles[i];
-        try {
-          const subtitleInfo = await this.getSubtitleInfo(subtitle);
-          options.push(...subtitleInfo);
-        } catch (err) {
-          console.log(err);
-        }
+    const fetchMetaRes = await this.fetchMeta(imdbId);
+    if (!fetchMetaRes.success) return { ...errOutput, errors: fetchMetaRes.errors };
+
+    for (let i = 0; i < fetchMetaRes.data!.subtitles.length; i++) {
+      const subtitle = fetchMetaRes.data!.subtitles[i];
+      const fetchZipRes = await this.fetchZip(subtitle);
+
+      if (!fetchZipRes.success) {
+        output.errors.push(...fetchZipRes.errors);
+        continue;
       }
 
-      return { imdbId, title: subdlInfo.results[0].name, releaseDate: subdlInfo.results[0].release_date, year: subdlInfo.results[0].year, options };
-    } else {
-      return { imdbId, title: null, releaseDate: null, year: null, options: [] };
+      const extractZipRes = await this.extractZip(fetchZipRes.data!);
+      if (!extractZipRes.success) {
+        output.errors.push(...extractZipRes.errors);
+        continue;
+      }
+
+      const author = subtitle.author;
+      const zipFile = path.basename(subtitle.url);
+      const srtFilePairs = toPairs(extractZipRes.data!);
+      for (let i = 0; i < srtFilePairs.length; i++) {
+        const [srtFile, subtitles] = srtFilePairs[i];
+        output.data.options.push({ author, zipFile, srtFile, subtitles });
+      }
+    }
+
+    output.data.title = fetchMetaRes.data!.results[0].name;
+    output.data.releaseDate = fetchMetaRes.data!.results[0].release_date;
+    output.data.year = fetchMetaRes.data!.results[0].year;
+    output.success = true;
+
+    return output;
+  }
+
+  private async fetchMeta(imdbId: string) {
+    try {
+      const response = await fetch(`${this.apiUrlBase}?api_key=${this.apiKey}&imdb_id=${imdbId}&type=movie&languages=EN`);
+      if (!response.ok) return { ...errOutput, errors: [new Error(`Subdl Error: api fetch returned ${response.status}`)] };
+
+      const data = (await response.json()) as SearchResult;
+      if (!data.status) return { ...errOutput, errors: [new Error(`Subdl Error: api fetch returned a status of 'false'`)] };
+
+      return { success: true, data, errors: [] };
+    } catch (cause) {
+      const causeMessage = get(cause, ['message'], null);
+      const message = 'Subdl Error: api fetch unexpected error ' + (causeMessage === null ? '' : `: '${causeMessage}'`);
+      return { ...errOutput, errors: [new Error(message, { cause })] };
     }
   }
 
-  private async fetchSubdlInfo(imdbId: string) {
-    const response = await fetch(`${this.apiUrlBase}?api_key=${this.apiKey}&imdb_id=${imdbId}&type=movie&languages=EN`);
-    const json: SearchResult = await response.json();
-    return json;
+  private async fetchZip(subtitle: Subtitle) {
+    try {
+      const url = `${this.subdlZipUrlBase}${subtitle.url}`;
+      const response = await fetch(url);
+      if (!response.ok) return { ...errOutput, errors: [new Error(`Subdl Error: zip fetch returned ${response.status}`)] };
+
+      const data = await response.arrayBuffer();
+      return { success: true, data, errors: [] };
+    } catch (cause) {
+      const causeMessage = get(cause, ['message'], null);
+      const message = 'Subdl Error: zip fetch unexpected error ' + (causeMessage === null ? '' : `: '${causeMessage}'`);
+      return { ...errOutput, errors: [new Error(message, { cause })] };
+    }
   }
 
-  private async getSubtitleInfo(subtitle: Subtitle) {
-    const subtitles: { author: string; zipFile: string; srtFile: string; subtitles: SubtitleBlock[] }[] = [];
-
-    const url = `${this.subdlZipUrlBase}${subtitle.url}`;
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    const zip = new AdmZip(Buffer.from(arrayBuffer));
-    const zipEntries = zip.getEntries();
-    zipEntries.forEach((entry) => {
-      if (!entry.isDirectory && endsWith(entry.entryName, '.srt')) {
-        const content = entry.getData().toString();
-        subtitles.push({ author: subtitle.author, zipFile: path.basename(url), srtFile: entry.entryName, subtitles: parseSrt(content) });
+  private async extractZip(arrayBuffer: ArrayBuffer) {
+    const data: Record<string, SubtitleBlock[]> = {};
+    try {
+      const zip = new AdmZip(Buffer.from(arrayBuffer));
+      const entries = zip.getEntries();
+      for (let i = 0; i < entries.length; i++) {
+        const entry = entries[i];
+        if (!entry.isDirectory && endsWith(entry.entryName, '.srt')) {
+          data[entry.entryName] = parseSrt(entry.getData().toString());
+        }
       }
-    });
 
-    return subtitles;
+      return { success: true, data, errors: [] };
+    } catch (cause) {
+      const causeMessage = get(cause, ['message'], null);
+      const message = 'Subdl Error: extract zip unexpected error ' + (causeMessage === null ? '' : `: '${causeMessage}'`);
+      return { ...errOutput, errors: [new Error(message, { cause })] };
+    }
   }
 }

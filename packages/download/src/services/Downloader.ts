@@ -33,8 +33,8 @@ export class Downloader {
     const gitHubComments: string[] = [];
 
     const omdbInfo = await this.omdbManager.getInfo(imdbId);
-    const subdlInfo = await this.subdlManager.getInfo(imdbId);
-    const title = omdbInfo.title ?? subdlInfo.title ?? 'Unknown Title';
+    const { success, data: subdlInfo, errors } = await this.subdlManager.getInfo(imdbId);
+    const title = omdbInfo.title ?? subdlInfo!.title ?? 'Unknown Title';
 
     this.logger.infoTitle(title);
     this.logger.infoProcessing(gitHubIssueNumber, imdbId);
@@ -48,7 +48,7 @@ export class Downloader {
       gitHubComments.push(`:heavy_multiplication_x: Metadata not found`);
     }
 
-    if (subdlInfo.options.length > 0) {
+    if (subdlInfo!.options.length > 0) {
       this.logger.infoMovieSubtitlesFound();
       gitHubComments.push(`:heavy_check_mark: Subtitles found`);
     } else {
