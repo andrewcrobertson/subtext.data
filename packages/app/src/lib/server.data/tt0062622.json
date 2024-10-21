@@ -1,8 +1,8 @@
 {
   "imdbId": "tt0062622",
   "title": "2001: A Space Odyssey",
-  "releaseDate": "12 May 1968",
-  "year": "1968",
+  "releaseDate": "1968-04-09T00:00:00.000Z",
+  "year": 1968,
   "options": [
     {
       "author": "CrAcKo",
@@ -38884,5 +38884,15 @@
       ]
     }
   ],
+  "success": true,
+  "data": {
+    "imdbId": "tt0062622",
+    "title": "2001: A Space Odyssey",
+    "poster": "https://m.media-amazon.com/images/M/MV5BNjU0NDFkMTQtZWY5OS00MmZhLTg3Y2QtZmJhMzMzMWYyYjc2XkEyXkFqcGc@._V1_SX300.jpg",
+    "releaseDate": "12 May 1968",
+    "year": "1968",
+    "options": []
+  },
+  "errors": [],
   "poster": "posters/tt0062622.jpg"
 }

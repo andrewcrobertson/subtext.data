@@ -17,6 +17,9 @@ export class Downloader {
   ) {}
 
   public async run(dataDir: string, posterDir: string) {
+    fs.mkdirSync(dataDir, { recursive: true });
+    fs.mkdirSync(posterDir, { recursive: true });
+
     this.logger.infoStarting();
     const openIssues = await this.gitHubApi.getOpenIssues('add');
 
