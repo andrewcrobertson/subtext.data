@@ -9,10 +9,10 @@ export class GithubApi {
   ) {}
 
   public async getOpenIssues(label: string) {
-    const issuesRaw = await this.get(`/issues?state=open&labels=${label}`);
+    const issuesRaw: any = await this.get(`/issues?state=open&labels=${label}`);
     const issues = chain(issuesRaw)
-      .filter((i) => startsWith(i.title, titlePrefix))
-      .map((i) => ({ gitHubIssueNumber: i.number, imdbId: trim(i.title.substring(titlePrefix.length)) }))
+      .filter((i: any) => startsWith(i.title, titlePrefix))
+      .map((i: any) => ({ gitHubIssueNumber: i.number, imdbId: trim(i.title.substring(titlePrefix.length)) }))
       .value();
 
     return issues;

@@ -35,8 +35,8 @@ jobs:
       - name: Download
         run: pnpm run script:download
 
-      # - name: Build
-      #   run: pnpm run build
+      - name: Build
+        run: pnpm run build
 
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v5
