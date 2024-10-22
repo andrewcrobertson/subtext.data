@@ -19,7 +19,7 @@ export class Logger {
   }
 
   public infoOpenGitHubIssuesFound(openIssueCount: number) {
-    const issueP11n = openIssueCount > 1 ? 'issues' : 'issue';
+    const issueP11n = openIssueCount === 1 ? 'issue' : 'issues';
     this.logInfo(`${green(openIssueCount)} open ${issueP11n} found`);
   }
 
