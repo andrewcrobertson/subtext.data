@@ -36,9 +36,7 @@ jobs:
         run: pnpm run script:download
 
       - name: Build
-        run: |
-          pnpm svelte-kit sync
-          pnpm run build
+        run: pnpm run build
 
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v5
