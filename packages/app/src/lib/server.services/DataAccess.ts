@@ -4,6 +4,8 @@ import { find, map } from 'lodash-es';
 import path from 'path';
 
 export class DataAccess {
+  private movies: Movie[] = [];
+
   public constructor(private readonly dirPath: string) {}
 
   public getIndex() {
@@ -18,6 +20,8 @@ export class DataAccess {
   }
 
   private getAllMovies() {
+    if (this.movies.length !== 0) return this.movies;
+
     const movies: Movie[] = [];
 
     const files = fs.readdirSync(this.dirPath);
@@ -28,6 +32,7 @@ export class DataAccess {
       }
     }
 
+    this.movies = movies;
     return movies;
   }
 }
