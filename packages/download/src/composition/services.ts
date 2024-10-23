@@ -5,8 +5,8 @@ import { Downloader } from '../services/Downloader';
 import { GithubApi } from '../services/GithubApi';
 import { Handler } from '../services/Handler';
 import { Logger } from '../services/Logger';
-import { OmdbManager } from '../services/OmdbManager';
-import { SubdlManager } from '../services/SubdlManager';
+import { OmdbApi } from '../services/OmdbApi';
+import { SubdlApi } from '../services/SubdlApi';
 import { getPkgMeta } from '../utils/getPkgMeta';
 
 // Checking in a token which only has public access.
@@ -26,10 +26,10 @@ const subdlZipUrlBase = `https://dl.subdl.com`;
 
 export const makeLogger = (verbose: boolean) => new Logger(logPrefix!, verbose);
 export const gitHubApi = new GithubApi(gitHubApiUrlBase, gitHubPublicToken);
-export const omdbManager = new OmdbManager(omdbApiUrlBase, omdbToken);
-export const subdlManager = new SubdlManager(subdlApiUrlBase, subdlZipUrlBase, subdlToken);
+export const omdbApi = new OmdbApi(omdbApiUrlBase, omdbToken);
+export const subdlApi = new SubdlApi(subdlApiUrlBase, subdlZipUrlBase, subdlToken);
 
 export const handler = (verbose: boolean) => {
   const logger = makeLogger(verbose);
-  return new Handler(new ArgParser(logger), new Downloader(gitHubApi, omdbManager, subdlManager, logger), logger);
+  return new Handler(new ArgParser(logger), new Downloader(gitHubApi, omdbApi, subdlApi, logger), logger);
 };

@@ -1,18 +1,19 @@
 import fs from 'fs';
-import { concat, isError, join, map } from 'lodash';
+import { concat, filter, flattenDeep, get, isError, join, map } from 'lodash';
 import path from 'path';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
+import { parseSrt } from '../utils/parseSrt';
 import { GithubApi } from './GithubApi';
 import type { Logger } from './Logger';
-import type { OmdbManager } from './OmdbManager';
-import type { SubdlManager } from './SubdlManager';
+import type { OmdbApi } from './OmdbApi';
+import { SubdlApi } from './SubdlApi';
 
 export class Downloader {
   public constructor(
     private readonly gitHubApi: GithubApi,
-    private readonly omdbManager: OmdbManager,
-    private readonly subdlManager: SubdlManager,
+    private readonly omdbApi: OmdbApi,
+    private readonly subdlApi: SubdlApi,
     private readonly logger: Logger
   ) {}
 
@@ -35,8 +36,8 @@ export class Downloader {
   private async process(dataDir: string, posterDir: string, gitHubIssueNumber: number, imdbId: string) {
     const gitHubComments: string[] = [];
 
-    const omdbInfoRes = await this.omdbManager.getInfo(imdbId);
-    const getInfoRes = await this.subdlManager.getInfo(imdbId);
+    const omdbInfoRes = await this.getOmdbInfo(imdbId);
+    const getInfoRes = await this.getSubdlInfo(imdbId);
     const errors = concat(omdbInfoRes.errors, getInfoRes.errors);
     const errorText = map(errors, (error) => (isError(error) ? error.message : (<any>error).toString()));
     const title = omdbInfoRes.data!.title ?? getInfoRes.data!.title ?? 'Unknown Title';
@@ -53,7 +54,7 @@ export class Downloader {
       gitHubComments.push(`:heavy_multiplication_x: Metadata not found`);
     }
 
-    if (getInfoRes.data!.options.length > 0) {
+    if (getInfoRes.data!.subtitles.length > 0) {
       this.logger.infoMovieSubtitlesFound();
       gitHubComments.push(`:heavy_check_mark: Subtitles found`);
     } else {
@@ -81,5 +82,37 @@ export class Downloader {
 
     await this.gitHubApi.addComment(gitHubIssueNumber, join(gitHubComments, '\n'));
     await this.gitHubApi.close(gitHubIssueNumber);
+  }
+
+  private async getOmdbInfo(imdbId: string) {
+    try {
+      const data = await this.omdbApi.getInfo(imdbId);
+      return { success: true, data, errors: [] };
+    } catch (cause) {
+      const causeMessage = get(cause, ['message'], null);
+      const message = 'Omdb Error: api fetch unexpected error ' + (causeMessage === null ? '' : `: '${causeMessage}'`);
+      return { success: false, data: null, errors: [new Error(message, { cause })] };
+    }
+  }
+
+  private async getSubdlInfo(imdbId: string) {
+    try {
+      const info = await this.subdlApi.getInfo(imdbId);
+      const errorsRaw = map(info.subtitles, (s) => s.errors);
+      const errors = flattenDeep(errorsRaw);
+      const subtitlesRaw = filter(info.subtitles, (s) => s.success);
+      const subtitles = map(subtitlesRaw, (s) => ({
+        author: s.data.author,
+        zipFile: s.data.zipFile,
+        srtFile: s.data.srtFile,
+        subtitles: parseSrt(s.data.srtText),
+      }));
+      const data = { ...info, subtitles };
+      return { success: true, data, errors };
+    } catch (cause) {
+      const causeMessage = get(cause, ['message'], null);
+      const message = 'Subdl Error: api fetch unexpected error ' + (causeMessage === null ? '' : `: '${causeMessage}'`);
+      return { success: false, data: null, errors: [new Error(message, { cause })] };
+    }
   }
 }
