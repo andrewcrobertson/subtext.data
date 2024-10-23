@@ -11,6 +11,12 @@ jobs:
 
     permissions:
       contents: write
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout
@@ -39,11 +45,23 @@ jobs:
           SUBDL_TOKEN: ${{ secrets.SUBDL_TOKEN }}
         run: pnpm run script:download
 
-      - name: Build
-        run: pnpm run build
-
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: automated data update
-          commit_options: '--no-verify --allow-empty'        
+          commit_options: '--no-verify --allow-empty'
+
+      - name: Build
+        env:
+          BASE_PATH: '/${{ github.event.repository.name }}'
+        run: pnpm run build
+
+      - name: Upload Artifacts
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # this should match the `pages` option in your adapter-static options
+          path: 'build/'
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
