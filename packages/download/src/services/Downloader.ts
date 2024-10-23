@@ -3,7 +3,7 @@ import { concat, filter, flattenDeep, get, isError, join, map } from 'lodash';
 import path from 'path';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
-import { OmdbSearchResponse, SubdlSearchResponse } from '../../types/Downloader';
+import { OmdbSearchResponse, SubdlSearchResponse, ToMovieResponse } from '../../types/Downloader';
 import { parseSrt } from '../utils/parseSrt';
 import { GithubApi } from './GithubApi';
 import type { Logger } from './Logger';
@@ -37,8 +37,8 @@ export class Downloader {
   private async process(dataDir: string, posterDir: string, gitHubIssueNumber: number, imdbId: string) {
     const gitHubComments: string[] = [];
 
-    const omdbSearchRes = await this.omdbSearch(imdbId);
-    const subdlSearchRes = await this.subdlSearch(imdbId);
+    const [omdbSearchRes, subdlSearchRes] = await Promise.all([this.omdbSearch(imdbId), this.subdlSearch(imdbId)]);
+
     const errors = concat(omdbSearchRes.errors, subdlSearchRes.errors);
     const errorText = map(errors, (error) => (isError(error) ? error.message : (<any>error).toString()));
     const title = omdbSearchRes.data?.title ?? subdlSearchRes.data?.title ?? 'Unknown Title';
@@ -55,8 +55,7 @@ export class Downloader {
       gitHubComments.push(`:heavy_multiplication_x: Metadata not found`);
     }
 
-    // if (subdlSearchRes.data.subtitles.length > 0) {
-    if (subdlSearchRes.success) {
+    if (subdlSearchRes.success && subdlSearchRes.data.subtitles.length > 0) {
       this.logger.infoMovieSubtitlesFound();
       gitHubComments.push(`:heavy_check_mark: Subtitles found`);
     } else {
@@ -84,11 +83,22 @@ export class Downloader {
       this.logger.infoSavedPosterFile(posterFile);
     }
 
-    const posterFileName = posterUrl === null ? null : `${imdbId}${path.parse(path.basename(posterUrl)).ext}`;
     const dataFile = path.resolve(dataDir, `${imdbId}.json`);
-    const movie = {
+    const movie = this.toMovie(imdbId, omdbSearchRes, subdlSearchRes);
+    fs.writeFileSync(dataFile, JSON.stringify(movie, null, 2));
+    this.logger.infoSavedDataFile(dataFile);
+
+    await this.gitHubApi.addComment(gitHubIssueNumber, join(gitHubComments, '\n'));
+    await this.gitHubApi.close(gitHubIssueNumber);
+  }
+
+  private toMovie(imdbId: string, omdbSearchRes: OmdbSearchResponse, subdlSearchRes: SubdlSearchResponse): ToMovieResponse {
+    const posterUrl = omdbSearchRes.data?.posterUrl ?? null;
+    const posterFileName = posterUrl === null ? null : `${imdbId}${path.parse(path.basename(posterUrl)).ext}`;
+
+    return {
       imdbId,
-      title,
+      title: omdbSearchRes.data?.title ?? subdlSearchRes.data?.title ?? null,
       releaseDate: omdbSearchRes.data?.releaseDate ?? subdlSearchRes.data?.releaseDate ?? null,
       releaseYear: omdbSearchRes.data?.releaseYear ?? subdlSearchRes.data?.releaseYear ?? null,
       posterFileName,
@@ -104,12 +114,6 @@ export class Downloader {
         lines: s.lines,
       })),
     };
-
-    fs.writeFileSync(dataFile, JSON.stringify(movie, null, 2));
-    this.logger.infoSavedDataFile(dataFile);
-
-    await this.gitHubApi.addComment(gitHubIssueNumber, join(gitHubComments, '\n'));
-    await this.gitHubApi.close(gitHubIssueNumber);
   }
 
   private async omdbSearch(imdbId: string): Promise<OmdbSearchResponse> {

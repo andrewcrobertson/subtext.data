@@ -3,7 +3,7 @@
   "title": "Guardians of the Galaxy",
   "releaseDate": "2014-08-01T00:00:00.000Z",
   "releaseYear": 2014,
-  "poster": "posters/tt2015381.jpg",
+  "posterFileName": "tt2015381.jpg",
   "rated": "PG-13",
   "genres": ["Action,", "Adventure,", "Comedy"],
   "actors": ["Chris Pratt", "Vin Diesel", "Bradley Cooper"],
