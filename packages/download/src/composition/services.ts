@@ -11,7 +11,7 @@ import { getPkgMeta } from '../utils/getPkgMeta';
 import { config } from './config';
 
 const pkgMeta = getPkgMeta(rootDir);
-const logPrefix = last(split(pkgMeta.name, '/'));
+const logPrefix = <string>last(split(pkgMeta.name, '/'));
 
 const gitHubPublicToken = config.gitHub.token;
 const gitHubApiUrlBase = config.gitHub.apiUrlBase;
@@ -21,7 +21,9 @@ const subdlToken = config.subdl.token;
 const subdlApiUrlBase = config.subdl.apiUrlBase;
 const subdlZipUrlBase = config.subdl.zipUrlBase;
 
-export const makeLogger = (verbose: boolean) => new Logger(logPrefix!, verbose);
+console.log(config);
+
+export const makeLogger = (verbose: boolean) => new Logger(logPrefix, verbose);
 export const gitHubApi = new GithubApi(gitHubApiUrlBase, gitHubPublicToken);
 export const omdbApi = new OmdbApi(omdbApiUrlBase, omdbToken);
 export const subdlApi = new SubdlApi(subdlApiUrlBase, subdlZipUrlBase, subdlToken);
