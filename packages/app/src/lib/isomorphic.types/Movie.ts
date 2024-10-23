@@ -1,4 +1,4 @@
-export interface ToMovieResponseSubtitle {
+export interface MovieSubtitle {
   author: string | null;
   zipFileName: string | null;
   srtFileName: string | null;
@@ -16,5 +16,5 @@ export interface Movie {
   actors: string[];
   runTime: number | null;
   plot: string | null;
-  subtitles: ToMovieResponseSubtitle[];
+  subtitles: MovieSubtitle[];
 }
