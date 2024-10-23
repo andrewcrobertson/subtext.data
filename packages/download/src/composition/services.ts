@@ -21,8 +21,6 @@ const subdlToken = config.subdl.token;
 const subdlApiUrlBase = config.subdl.apiUrlBase;
 const subdlZipUrlBase = config.subdl.zipUrlBase;
 
-console.log(config);
-
 export const makeLogger = (verbose: boolean) => new Logger(logPrefix, verbose);
 export const gitHubApi = new GithubApi(gitHubApiUrlBase, gitHubPublicToken);
 export const omdbApi = new OmdbApi(omdbApiUrlBase, omdbToken);
