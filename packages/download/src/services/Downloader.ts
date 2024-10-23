@@ -3,6 +3,7 @@ import { concat, filter, flattenDeep, get, isError, join, map } from 'lodash';
 import path from 'path';
 import { pipeline } from 'stream';
 import { promisify } from 'util';
+import { parseSrt } from '../utils/parseSrt';
 import { GithubApi } from './GithubApi';
 import type { Logger } from './Logger';
 import type { OmdbApi } from './OmdbApi';
@@ -84,7 +85,25 @@ export class Downloader {
 
     const posterUrl = poster === null ? null : `posters/${imdbId}${path.parse(path.basename(poster)).ext}`;
     const dataFile = path.resolve(dataDir, `${imdbId}.json`);
-    const movie = { ...subdlSearchRes.data, ...omdbSearchRes.data, poster: posterUrl };
+    const movie = {
+      imdbId,
+      title,
+      releaseDate: omdbSearchRes.data?.releaseDate ?? subdlSearchRes.data?.releaseDate ?? null,
+      releaseYear: omdbSearchRes.data?.releaseYear ?? subdlSearchRes.data?.releaseYear ?? null,
+      poster: posterUrl,
+      rated: omdbSearchRes.data?.rated ?? null,
+      genres: omdbSearchRes.data?.genres ?? [],
+      actors: omdbSearchRes.data?.actors ?? [],
+      runTime: omdbSearchRes.data?.runTime ?? null,
+      plot: omdbSearchRes.data?.plot ?? null,
+      subtitles: map(subdlSearchRes.data?.subtitles, (f) => ({
+        author: f.author,
+        zipFileName: f.zipFileName,
+        srtFileName: f.srtFileName,
+        lines: f.lines,
+      })),
+    };
+
     fs.writeFileSync(dataFile, JSON.stringify(movie, null, 2));
     this.logger.infoSavedDataFile(dataFile);
 
@@ -105,17 +124,11 @@ export class Downloader {
 
   private async subdlSearch(imdbId: string) {
     try {
-      const dataRaw = await this.subdlApi.search(imdbId);
-      const errorsRaw = map(dataRaw.subtitles, (s) => s.errors);
+      const { subtitles: subtitlesAll, ...dataRaw } = await this.subdlApi.search(imdbId);
+      const errorsRaw = map(subtitlesAll, (s) => s.errors);
       const errors = flattenDeep(errorsRaw);
-      const subtitlesRaw = filter(dataRaw.subtitles, (s) => s.data !== null);
-      const subtitles = map(subtitlesRaw, (s) => ({
-        author: s.data.author,
-        zipFile: s.data.zipFile,
-        srtFile: s.data.srtFile,
-        subtitles: s.data.srtText,
-        // subtitles: parseSrt(s.data.srtText),
-      }));
+      const subtitlesRaw = filter(subtitlesAll, (s) => s.data !== null);
+      const subtitles = map(subtitlesRaw, (s) => ({ ...s.data, lines: parseSrt(s.data.srtFileText) }));
       const data = { ...dataRaw, subtitles };
       return { success: true, data, errors };
     } catch (cause) {

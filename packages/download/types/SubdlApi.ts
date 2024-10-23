@@ -36,26 +36,26 @@ export interface SearchResponse {
   title: string | null;
   releaseDate: string | null;
   releaseYear: number | null;
-  subtitles: SearchResponseSubtitle[];
+  subtitles: SearchResponseSubtitleFile[];
 }
 
-export interface SearchResponseSubtitleData {
+export interface SearchResponseSubtitleFileData {
   author: string | null;
-  zipFile: string | null;
-  srtFile: string | null;
-  srtText: string;
+  zipFileName: string | null;
+  srtFileName: string | null;
+  srtFileText: string;
 }
 
-export interface SearchResponseSubtitleOk {
+export interface SearchResponseSubtitleFileOk {
   success: true;
-  data: SearchResponseSubtitleData;
+  data: SearchResponseSubtitleFileData;
   errors: Error[];
 }
 
-export interface SearchResponseSubtitleFail {
+export interface SearchResponseSubtitleFileFail {
   success: false;
   data: null;
   errors: Error[];
 }
 
-export type SearchResponseSubtitle = SearchResponseSubtitleOk | SearchResponseSubtitleFail;
+export type SearchResponseSubtitleFile = SearchResponseSubtitleFileOk | SearchResponseSubtitleFileFail;

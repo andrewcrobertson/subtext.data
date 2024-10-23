@@ -26,7 +26,7 @@ export class SubdlApi {
         const srtFilePairs = toPairs(extractZipRes);
         for (let i = 0; i < srtFilePairs.length; i++) {
           const [srtFile, srtText] = srtFilePairs[i];
-          output.subtitles.push({ success: true, data: { author, zipFile, srtFile, srtText }, errors: [] });
+          output.subtitles.push({ success: true, data: { author, zipFileName: zipFile, srtFileName: srtFile, srtFileText: srtText }, errors: [] });
         }
       } catch (err) {
         output.subtitles.push({ success: false, data: null, errors: [<any>err] });
