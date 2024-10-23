@@ -10,13 +10,13 @@ export class DataAccess {
 
   public getIndex() {
     const allMovies = this.getAllMovies();
-    return map(allMovies, ({ imdbId, title, poster }) => ({ id: imdbId, title, poster }));
+    return map(allMovies, ({ imdbId, title, posterFileName }) => ({ id: imdbId, title, posterFileName }));
   }
 
   public getView(id: string) {
     const allMovies = this.getAllMovies();
     const movie = find(allMovies, (m) => m.imdbId === id);
-    return { title: movie!.title, subtitles: movie!.options[0].subtitles };
+    return { title: movie!.title, subtitles: movie!.subtitles[0].lines };
   }
 
   private getAllMovies() {
