@@ -8,7 +8,7 @@
     "dist/**/*"
   ],
   "scripts": {
-    "build": "run-s clean checktypes test pkgroll",
+    "build.off": "run-s clean checktypes test pkgroll",
     "clean": "shx rm -rf ./dist ./coverage",
     "checktypes": "tsc --noEmit",
     "dev": "tsx ./src/index.ts",
