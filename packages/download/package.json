@@ -11,7 +11,7 @@
     "build": "run-s clean checktypes test pkgroll",
     "clean": "shx rm -rf ./dist ./coverage",
     "checktypes": "tsc --noEmit",
-    "dev": "dotenvx run -f ./.env -- tsx ./src/index.ts",
+    "dev": "dotenvx run -- tsx ./src/index.ts",
     "test": "jest --verbose",
     "pkgroll": "pkgroll --minify"
   },
