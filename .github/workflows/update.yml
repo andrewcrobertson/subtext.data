@@ -33,6 +33,10 @@ jobs:
         run: pnpm install
 
       - name: Download
+        env:
+          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+          OMDB_TOKEN: ${{ secrets.OMDB_TOKEN }}
+          SUBDL_TOKEN: ${{ secrets.SUBDL_TOKEN }}
         run: pnpm run script:download
 
       - name: Build
