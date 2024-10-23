@@ -6,7 +6,7 @@ export const parseSubtitleLine = (input: string) => {
 
   const start = parseInt(match[1], 10);
   const end = parseInt(match[2], 10);
-  const text = match[3];
+  const text = match[3].replace(/\n/g, '<br>');
   return { start, end, text };
 };
 
