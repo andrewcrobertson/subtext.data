@@ -1,5 +1,5 @@
-import { endsWith, get, parseInt, split } from 'lodash';
-import type { SearchResult } from '../../types/Imdb';
+import { endsWith, get, map, parseInt, split, trim } from 'lodash';
+import type { ApiSearchResponse, SearchResponse } from '../../types/OmdbApi';
 
 export class OmdbApi {
   public constructor(
@@ -7,17 +7,18 @@ export class OmdbApi {
     private readonly apiKey: string
   ) {}
 
-  public async search(imdbId: string) {
+  public async search(imdbId: string): Promise<SearchResponse> {
     const fetchSearchRes = await this.fetchSearch(imdbId);
 
     const output = {
+      imdbId,
       title: fetchSearchRes.Title,
       poster: fetchSearchRes.Poster,
       releaseDate: this.parseReleaseDate(fetchSearchRes.Released),
       releaseYear: this.parseReleaseYear(fetchSearchRes.Year),
       rated: fetchSearchRes.Rated,
-      genres: split(fetchSearchRes.Genre, ' '),
-      actors: split(fetchSearchRes.Actors, ' '),
+      genres: map(split(fetchSearchRes.Genre, ' '), (g) => trim(g)),
+      actors: map(split(fetchSearchRes.Actors, ','), (a) => trim(a)),
       runTime: this.parseRunTime(fetchSearchRes.Runtime),
       plot: fetchSearchRes.Plot,
     };
@@ -31,7 +32,7 @@ export class OmdbApi {
       const response = await fetch(url);
       if (!response.ok) throw new Error(`Omdb Error: api fetch returned ${response.status}`);
 
-      const data = (await response.json()) as SearchResult;
+      const data = (await response.json()) as ApiSearchResponse;
       return data;
     } catch (cause) {
       const causeMessage = get(cause, ['message'], null);
@@ -42,7 +43,7 @@ export class OmdbApi {
 
   private parseReleaseDate(date: string) {
     try {
-      return new Date(Date.parse(`${date} UTC`));
+      return new Date(Date.parse(`${date} UTC`)).toISOString();
     } catch (err) {
       console.error(`Could not parse release date: '${date}'`, err);
       return null;

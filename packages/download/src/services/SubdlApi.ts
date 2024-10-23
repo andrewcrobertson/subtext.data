@@ -1,8 +1,7 @@
 import AdmZip from 'adm-zip';
 import { get, toPairs } from 'lodash';
 import path from 'path';
-import type { Subtitle } from '../../types/Subdl';
-import { ApiSearchResponse, GetInfoResponse } from '../../types/SubdlApi';
+import { ApiSearchResponse, ApiSearchResponseSubtitle, SearchResponse } from '../../types/SubdlApi';
 
 export class SubdlApi {
   public constructor(
@@ -11,8 +10,8 @@ export class SubdlApi {
     private readonly apiKey: string
   ) {}
 
-  public async search(imdbId: string) {
-    const output: GetInfoResponse = { imdbId, title: null, releaseDate: null, releaseYear: null, subtitles: [] };
+  public async search(imdbId: string): Promise<SearchResponse> {
+    const output: SearchResponse = { imdbId, title: null, releaseDate: null, releaseYear: null, subtitles: [] };
 
     const fetchSearchRes = await this.fetchSearch(imdbId);
 
@@ -60,7 +59,7 @@ export class SubdlApi {
     }
   }
 
-  private async fetchZip(subtitle: Subtitle): Promise<ArrayBuffer> {
+  private async fetchZip(subtitle: ApiSearchResponseSubtitle): Promise<ArrayBuffer> {
     try {
       const url = `${this.subdlZipUrlBase}${subtitle.url}`;
       const response = await fetch(url);

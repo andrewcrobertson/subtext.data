@@ -1,9 +1,9 @@
-export interface Rating {
+export interface ApiSearchResponseRating {
   Source: string;
   Value: string;
 }
 
-export interface SearchResult {
+export interface ApiSearchResponse {
   Title: string;
   Year: string;
   Rated: string;
@@ -18,7 +18,7 @@ export interface SearchResult {
   Country: string;
   Awards: string;
   Poster: string;
-  Ratings: Rating[];
+  Ratings: ApiSearchResponseRating[];
   Metascore: string;
   imdbRating: string;
   imdbVotes: string;
@@ -29,4 +29,17 @@ export interface SearchResult {
   Production: string;
   Website: string;
   Response: string;
+}
+
+export interface SearchResponse {
+  imdbId: string;
+  title: string | null;
+  poster: string | null;
+  releaseDate: string | null;
+  releaseYear: number | null;
+  rated: string | null;
+  genres: string[];
+  actors: string[];
+  runTime: number | null;
+  plot: string | null;
 }

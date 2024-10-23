@@ -31,31 +31,31 @@ export interface ApiSearchResponse {
   subtitles: ApiSearchResponseSubtitle[];
 }
 
-export interface GetInfoResponse {
+export interface SearchResponse {
   imdbId: string;
   title: string | null;
   releaseDate: string | null;
   releaseYear: number | null;
-  subtitles: GetInfoSubtitle[];
+  subtitles: SearchResponseSubtitle[];
 }
 
-export interface GetInfoSubtitleData {
+export interface SearchResponseSubtitleData {
   author: string | null;
   zipFile: string | null;
   srtFile: string | null;
   srtText: string;
 }
 
-export interface GetInfoSubtitleOk {
+export interface SearchResponseSubtitleOk {
   success: true;
-  data: GetInfoSubtitleData;
+  data: SearchResponseSubtitleData;
   errors: Error[];
 }
 
-export interface GetInfoSubtitleFail {
+export interface SearchResponseSubtitleFail {
   success: false;
   data: null;
   errors: Error[];
 }
 
-export type GetInfoSubtitle = GetInfoSubtitleOk | GetInfoSubtitleFail;
+export type SearchResponseSubtitle = SearchResponseSubtitleOk | SearchResponseSubtitleFail;
