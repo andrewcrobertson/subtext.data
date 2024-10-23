@@ -17,7 +17,7 @@ export class SubdlApi {
 
     for (let i = 0; i < fetchSearchRes.subtitles.length; i++) {
       const subtitle = fetchSearchRes.subtitles[i];
-      const author = subtitle.author;
+      const author = subtitle.author ?? null;
       const zipFile = path.basename(subtitle.url);
 
       try {
@@ -25,8 +25,8 @@ export class SubdlApi {
         const extractZipRes = await this.extractZip(fetchZipRes);
         const srtFilePairs = toPairs(extractZipRes);
         for (let i = 0; i < srtFilePairs.length; i++) {
-          const [srtFile, srtText] = srtFilePairs[i];
-          output.subtitles.push({ success: true, data: { author, zipFileName: zipFile, srtFileName: srtFile, srtFileText: srtText }, errors: [] });
+          const [srtFileName, srtFileText] = srtFilePairs[i];
+          output.subtitles.push({ success: true, data: { author, zipFileName: zipFile, srtFileName, srtFileText }, errors: [] });
         }
       } catch (err) {
         output.subtitles.push({ success: false, data: null, errors: [<any>err] });
@@ -35,9 +35,9 @@ export class SubdlApi {
 
     for (let i = 0; i < fetchSearchRes.results.length; i++) {
       const result = fetchSearchRes.results[i];
-      output.title = result.name;
-      output.releaseDate = result.release_date;
-      output.releaseYear = result.year;
+      output.title = result.name ?? null;
+      output.releaseDate = result.release_date ?? null;
+      output.releaseYear = result.year ?? null;
     }
 
     return output;
