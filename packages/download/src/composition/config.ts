@@ -3,7 +3,7 @@ import { environment } from '../config/environment';
 
 export const config: Config = {
   gitHub: {
-    token: environment.GITHUB_TOKEN,
+    token: environment.REPO_TOKEN,
     apiUrlBase: 'https://api.gitHub.com/repos/andrewcrobertson/subtext.data',
   },
   omdb: {
