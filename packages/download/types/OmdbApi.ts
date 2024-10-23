@@ -34,12 +34,12 @@ export interface ApiSearchResponse {
 export interface SearchResponse {
   imdbId: string;
   title: string | null;
-  poster: string | null;
+  posterUrl: string | null;
   releaseDate: string | null;
   releaseYear: number | null;
   rated: string | null;
   genres: string[];
   actors: string[];
-  runTime: number | null;
+  runTimeMins: number | null;
   plot: string | null;
 }

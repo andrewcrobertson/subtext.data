@@ -13,13 +13,13 @@ export class OmdbApi {
     const output = {
       imdbId,
       title: fetchSearchRes.Title,
-      poster: fetchSearchRes.Poster,
+      posterUrl: fetchSearchRes.Poster,
       releaseDate: this.parseReleaseDate(fetchSearchRes.Released),
       releaseYear: this.parseReleaseYear(fetchSearchRes.Year),
       rated: fetchSearchRes.Rated,
       genres: map(split(fetchSearchRes.Genre, ' '), (g) => trim(g)),
       actors: map(split(fetchSearchRes.Actors, ','), (a) => trim(a)),
-      runTime: this.parseRunTime(fetchSearchRes.Runtime),
+      runTimeMins: this.parseRunTime(fetchSearchRes.Runtime),
       plot: fetchSearchRes.Plot,
     };
 
