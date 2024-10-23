@@ -47,13 +47,17 @@ export class Logger {
     this.logWarn(`Subtitles not found`);
   }
 
+  public infoSavedPosterFile(posterFile: string) {
+    this.logInfo(`Saved poster file ${this.formatPath(posterFile)}`);
+  }
+
+  public infoSavedDataFile(dataFile: string) {
+    this.logInfo(`Saved data file ${this.formatPath(dataFile)}`);
+  }
+
   public errorMessage(message: string) {
     this.logError(message);
   }
-
-  // public errorInvalidFileArgsInputFileNotExist(inputFile: string) {
-  //   this.logError(`Could not find input file ${this.formatPath(inputFile)}`);
-  // }
 
   public errorInvalidDataDirAndPosterDirArgsOutput() {
     this.logError(`Please include ${green('data-dir')} and ${green('poster-dir')} args`);

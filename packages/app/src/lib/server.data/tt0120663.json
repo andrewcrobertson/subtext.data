@@ -2,8 +2,8 @@
   "imdbId": "tt0120663",
   "title": "Eyes Wide Shut",
   "releaseDate": "1999-07-16T00:00:00.000Z",
-  "year": 1999,
-  "options": [
+  "releaseYear": 1999,
+  "subtitles": [
     {
       "author": "DariusBellpepper",
       "zipFile": "3230650-3248024.zip",
@@ -81914,10 +81914,14 @@
   "data": {
     "imdbId": "tt0120663",
     "title": "Eyes Wide Shut",
-    "poster": "https://m.media-amazon.com/images/M/MV5BYzMzZjcyNzEtZjE2OC00Yjk3LWExOGItODdhNzhkZTdmM2M0XkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_SX300.jpg",
-    "releaseDate": "16 Jul 1999",
-    "year": "1999",
-    "options": []
+    "poster": "https://m.media-amazon.com/images/M/MV5BZTQ0MmM5MDAtYmYyZS00MzlmLTlhZTAtZDJlZWY5ZTZkZjZmXkEyXkFqcGc@._V1_SX300.jpg",
+    "releaseDate": "1999-07-16T00:00:00.000Z",
+    "releaseYear": 1999,
+    "rated": "TV-MA",
+    "genres": ["Drama,", "Mystery,", "Thriller"],
+    "actors": ["Tom Cruise", "Nicole Kidman", "Todd Field"],
+    "runTime": 159,
+    "plot": "A Manhattan doctor embarks on a bizarre, night-long odyssey after his wife's admission of unfulfilled longing."
   },
   "errors": [],
   "poster": "posters/tt0120663.jpg"
