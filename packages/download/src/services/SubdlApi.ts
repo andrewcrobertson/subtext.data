@@ -11,8 +11,8 @@ export class SubdlApi {
     private readonly apiKey: string
   ) {}
 
-  public async getInfo(imdbId: string) {
-    const output: GetInfoResponse = { imdbId, title: null, releaseDate: null, year: null, subtitles: [] };
+  public async search(imdbId: string) {
+    const output: GetInfoResponse = { imdbId, title: null, releaseDate: null, releaseYear: null, subtitles: [] };
 
     const fetchSearchRes = await this.fetchSearch(imdbId);
 
@@ -38,7 +38,7 @@ export class SubdlApi {
       const result = fetchSearchRes.results[i];
       output.title = result.name;
       output.releaseDate = result.release_date;
-      output.year = result.year;
+      output.releaseYear = result.year;
     }
 
     return output;

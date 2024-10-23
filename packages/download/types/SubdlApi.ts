@@ -35,7 +35,7 @@ export interface GetInfoResponse {
   imdbId: string;
   title: string | null;
   releaseDate: string | null;
-  year: number | null;
+  releaseYear: number | null;
   subtitles: GetInfoSubtitle[];
 }
 

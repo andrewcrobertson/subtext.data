@@ -36,17 +36,17 @@ export class Downloader {
   private async process(dataDir: string, posterDir: string, gitHubIssueNumber: number, imdbId: string) {
     const gitHubComments: string[] = [];
 
-    const omdbInfoRes = await this.getOmdbInfo(imdbId);
-    const getInfoRes = await this.getSubdlInfo(imdbId);
-    const errors = concat(omdbInfoRes.errors, getInfoRes.errors);
+    const omdbSearchRes = await this.omdbSearch(imdbId);
+    const subdlSearchRes = await this.subdlSearch(imdbId);
+    const errors = concat(omdbSearchRes.errors, subdlSearchRes.errors);
     const errorText = map(errors, (error) => (isError(error) ? error.message : (<any>error).toString()));
-    const title = omdbInfoRes.data!.title ?? getInfoRes.data!.title ?? 'Unknown Title';
+    const title = omdbSearchRes.data!.title ?? subdlSearchRes.data!.title ?? 'Unknown Title';
 
     this.logger.infoTitle(title);
     this.logger.infoProcessing(gitHubIssueNumber, imdbId);
     gitHubComments.push(`**${title}**`);
 
-    if (omdbInfoRes.success) {
+    if (omdbSearchRes.success) {
       this.logger.infoMovieMetadataFound();
       gitHubComments.push(`:heavy_check_mark: Metadata found`);
     } else {
@@ -54,7 +54,8 @@ export class Downloader {
       gitHubComments.push(`:heavy_multiplication_x: Metadata not found`);
     }
 
-    if (getInfoRes.data!.subtitles.length > 0) {
+    // if (subdlSearchRes.data.subtitles.length > 0) {
+    if (subdlSearchRes.success) {
       this.logger.infoMovieSubtitlesFound();
       gitHubComments.push(`:heavy_check_mark: Subtitles found`);
     } else {
@@ -72,21 +73,21 @@ export class Downloader {
       }
     }
 
-    const ext = path.parse(path.basename(omdbInfoRes.data!.poster!)).ext;
-    const response = await fetch(omdbInfoRes.data!.poster!);
+    const ext = path.parse(path.basename(omdbSearchRes.data!.poster!)).ext;
+    const response = await fetch(omdbSearchRes.data!.poster!);
     const fileStream = fs.createWriteStream(path.resolve(posterDir, `${imdbId}${ext}`));
     await promisify(pipeline)(response.body as unknown as NodeJS.ReadableStream, fileStream);
 
-    const movie = { ...getInfoRes.data, ...omdbInfoRes, poster: `posters/${imdbId}${ext}` };
+    const movie = { ...subdlSearchRes.data, ...omdbSearchRes, poster: `posters/${imdbId}${ext}` };
     fs.writeFileSync(path.resolve(dataDir, `${imdbId}.json`), JSON.stringify(movie, null, 2));
 
     await this.gitHubApi.addComment(gitHubIssueNumber, join(gitHubComments, '\n'));
     await this.gitHubApi.close(gitHubIssueNumber);
   }
 
-  private async getOmdbInfo(imdbId: string) {
+  private async omdbSearch(imdbId: string) {
     try {
-      const data = await this.omdbApi.getInfo(imdbId);
+      const data = await this.omdbApi.search(imdbId);
       return { success: true, data, errors: [] };
     } catch (cause) {
       const causeMessage = get(cause, ['message'], null);
@@ -95,9 +96,9 @@ export class Downloader {
     }
   }
 
-  private async getSubdlInfo(imdbId: string) {
+  private async subdlSearch(imdbId: string) {
     try {
-      const info = await this.subdlApi.getInfo(imdbId);
+      const info = await this.subdlApi.search(imdbId);
       const errorsRaw = map(info.subtitles, (s) => s.errors);
       const errors = flattenDeep(errorsRaw);
       const subtitlesRaw = filter(info.subtitles, (s) => s.success);
