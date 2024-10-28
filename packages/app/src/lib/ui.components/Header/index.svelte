@@ -26,7 +26,11 @@
 {#if mode === T.Mode.Edit}
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div transition:fade class={twMerge('flex justify-between items-center p-4 z-10 bg-yellow-500 border-b-2 border-yellow-500', _class)} on:click={onEditClick}>
+  <div
+    transition:fade
+    class={twMerge('flex justify-between items-center p-4 z-10 bg-yellow-500 border-b-2 border-yellow-500 h-14', _class)}
+    on:click={onEditClick}
+  >
     <div class="flex space-x-4">
       <div class="flex items-center">
         <ChatBubbleLeftRightIcon class="text-black w-6 h-6 mr-2" />
@@ -41,30 +45,30 @@
     </div>
   </div>
 {:else}
-  <div transition:fade class={twMerge('flex justify-between items-center p-4 z-10 bg-black bg-opacity-80 border-b-2 border-yellow-500', _class)}>
+  <div transition:fade class={twMerge('flex justify-between items-center p-4 z-10 bg-black bg-opacity-80 border-b-2 border-yellow-500 h-14', _class)}>
     <div class="flex space-x-4">
       <div class="flex items-center">
         <ChatBubbleLeftRightIcon class="text-yellow-500 w-6 h-6 mr-2" />
         <p class="font-semibold text-lg text-yellow-500 hidden sm:block">SubText</p>
       </div>
       <a href={`${base}/help`} class="flex items-center">
-        <QuestionMarkCircleIcon class="text-white w-5 h-5" />
+        <QuestionMarkCircleIcon class="text-white size-5" />
         <p class="text-white text-sm hidden sm:inline">Help</p>
       </a>
     </div>
     <div class="flex space-x-4">
       {#if allowEdit}
         <button class="flex items-center" on:click={onEditClick}>
-          <PencilSquareIcon class="text-white w-5 h-5" />
+          <PencilSquareIcon class="text-white size-5" />
           <p class="text-white text-sm hidden sm:inline">Edit</p>
         </button>
       {/if}
       <a href={`${base}/request`} class="flex items-center">
-        <PlusIcon class="text-white w-5 h-5" />
+        <PlusIcon class="text-white size-5" />
         <p class="text-white text-sm hidden sm:inline">Request</p>
       </a>
       <a href={`${base}/search`} class="flex items-center">
-        <MagnifyingGlassIcon class="text-white w-5 h-5" />
+        <MagnifyingGlassIcon class="text-white size-5" />
         <p class="text-white text-sm hidden sm:inline">Search</p>
       </a>
     </div>

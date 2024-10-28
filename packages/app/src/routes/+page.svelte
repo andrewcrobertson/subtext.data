@@ -41,7 +41,6 @@
 
 <Header class="fixed top-0 left-0 right-0" {mode} allowEdit={myListMovies.length > 0} on:modechange={handleModeChange} />
 <div class="mt-16"></div>
-
 <TransitionWhenLoaded {loaded}>
   {#if myListMovies.length > 0}
     <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 pr-2 overflow-y-auto scrollbar-hide">

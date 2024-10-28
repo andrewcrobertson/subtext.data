@@ -6,6 +6,7 @@
   import { searchService } from '$lib/ui.composition/searchService';
   import ArrowLeftIcon from '$lib/ui.icons/ArrowLeftIcon.svelte';
   import MagnifyingGlassIcon from '$lib/ui.icons/MagnifyingGlassIcon.svelte';
+  import PlusIcon from '$lib/ui.icons/PlusIcon.svelte';
   import { findIndex } from 'lodash-es';
   import { onMount } from 'svelte';
 
@@ -35,13 +36,23 @@
   });
 </script>
 
-<div class="fixed top-0 left-0 right-0 flex items-center justify-between p-2 z-10 bg-black bg-opacity-70 border-b-2 border-yellow-500">
-  <button class="btn btn-square text-white" on:click={handleBackClick}>
-    <ArrowLeftIcon class="size-8" />
-  </button>
-  <div class="flex items-center">
-    <MagnifyingGlassIcon class="text-white size-8 mr-1" />
-    <input type="text" class="h-8 p-2" bind:value={searchQuery} />
+<div class="fixed top-0 left-0 right-0 flex items-center justify-between p-4 z-10 bg-black bg-opacity-70 border-b-2 border-yellow-500 h-14">
+  <div class="flex space-x-4">
+    <button class="btn btn-square text-white" on:click={handleBackClick}>
+      <ArrowLeftIcon class="size-5" />
+    </button>
+    <p class="text-white font-semibold text-lg hidden sm:inline">Search</p>
+  </div>
+  <div class="flex space-x-2">
+    <div class="flex items-center">
+      <input
+        type="text"
+        class="w-full h-6 p-1 bg-gray-800 text-white text-sm border border-gray-700 focus:outline-none focus:border-yellow-500 mr-1"
+        placeholder="Search for a movie"
+        bind:value={searchQuery}
+      />
+      <MagnifyingGlassIcon class="text-white size-5" />
+    </div>
   </div>
 </div>
 <div class="mt-16"></div>
@@ -52,19 +63,21 @@
     {/if}
     {#if recentMovies.length === 0}
       <p class="text-white text-xl mt-4">
-        There are no movies in the database. Would you like to <a class="font-bold text-yellow-500" href={`${base}/request?q=${searchQuery}`}>request</a> one?
+        No movies found in the database. Would you like to <a class="font-bold text-yellow-500 hover:underline" href={`${base}/request?q=${searchQuery}`}
+          >request a movie?</a
+        >
       </p>
     {/if}
   {:else if filteredMovies.length > 0}
     <MovieDetailPanelGrid movies={filteredMovies} on:addclick={handleAddClick} on:removeclick={handleRemoveClick} />
     <p class="text-white text-xl mt-4">
-      Not what you were looking for? Would you like to <a class="font-bold text-yellow-500" href={`${base}/request?q=${searchQuery}`}>request</a> it?
+      Not quite what you wanted? <a class="font-bold text-yellow-500 hover:underline" href={`${base}/request?q=${searchQuery}`}>Request it here!</a>
     </p>
   {:else}
     <p class="text-white text-xl mt-4">
-      Sorry, we couldn't find a matching movie in the database. Would you like to <a class="font-bold text-yellow-500" href={`${base}/request?q=${searchQuery}`}
-        >request</a
-      > it?
+      Sorry, no matches found. Would you like to <a class="font-bold text-yellow-500 hover:underline" href={`${base}/request?q=${searchQuery}`}
+        >request this movie?</a
+      >
     </p>
   {/if}
 </TransitionWhenLoaded>

@@ -7,12 +7,11 @@
   import { writable } from 'svelte/store';
 
   let query = '';
-
   const idOrUrl = writable('');
 
-  const handleBackClick = ({}: MouseEvent) => history.back();
+  const handleBackClick = () => history.back();
 
-  const handleSubmit = async ({}: SubmitEvent) => {
+  const handleSubmit = async () => {
     const submitRequestRes = await requestService.submitRequest($idOrUrl);
     const link = base + (submitRequestRes.success ? '/request/ok' : '/request/err');
     goto(link, { replaceState: true });
@@ -24,28 +23,30 @@
   });
 </script>
 
-<div class="fixed top-0 left-0 right-0 flex items-center justify-between text-white p-2 z-10 bg-black bg-opacity-70 border-b-2 border-yellow-500">
-  <div class="flex space-x-2">
+<div class="fixed top-0 left-0 right-0 flex items-center justify-between p-4 z-10 bg-black bg-opacity-80 border-b-2 border-yellow-500 h-14">
+  <div class="flex items-center space-x-4">
     <button class="btn btn-square text-white" on:click={handleBackClick}>
-      <ArrowLeftIcon class="size-8" />
+      <ArrowLeftIcon class="w-5 h-5" />
     </button>
+    <p class="text-white font-semibold text-lg hidden sm:inline">Request Subtitles</p>
   </div>
 </div>
 <div class="mt-16"></div>
-<div class="p-4 text-xl mx-auto max-w-screen-md">
-  <div class="pb-10 text-white">
-    <p class="pb-4">
-      To request subtitles for a movie, <a class="font-bold text-yellow-500" href={requestService.getImdbQueryUrl(query)}>search for the movie in IMDb</a> and submit
-      it's url or id below.
-    </p>
-    <p>
-      To find out more, you can read about IMDb <a class="font-bold text-yellow-500" href="https://developer.imdb.com/documentation/key-concepts"
-        >data key concepts</a
-      >.
+<div class="p-4 mx-auto max-w-screen-md text-white">
+  <div class="pb-10">
+    <p class="text-lg mb-4">
+      To request subtitles, <a class="font-bold text-yellow-500 underline" href={requestService.getImdbQueryUrl(query)}>search for the movie on IMDb</a> and
+      submit the movie’s IMDb URL or ID below. For more information, read about
+      <a class="font-bold text-yellow-500 underline" href="https://developer.imdb.com/documentation/key-concepts" target="_blank">IMDb data concepts</a>.
     </p>
   </div>
-  <form on:submit|preventDefault={handleSubmit}>
-    <input type="text" class="h-8 p-2" bind:value={$idOrUrl} />
-    <button class="text-white" type="submit">Submit</button>
+  <form on:submit|preventDefault={handleSubmit} class="flex items-center gap-2">
+    <input
+      type="text"
+      class="w-full h-10 p-2 bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-yellow-500"
+      placeholder="Enter IMDb movie URL or ID"
+      bind:value={$idOrUrl}
+    />
+    <button type="submit" class="h-10 px-4 bg-yellow-500 text-black font-bold hover:bg-yellow-600"> Submit </button>
   </form>
 </div>
