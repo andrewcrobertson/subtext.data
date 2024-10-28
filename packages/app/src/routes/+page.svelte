@@ -43,7 +43,7 @@
 <div class="mt-16"></div>
 <TransitionWhenLoaded {loaded}>
   {#if myListMovies.length > 0}
-    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 pr-2 overflow-y-auto scrollbar-hide">
+    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-1 px-1 pb-1 overflow-y-auto scrollbar-hide">
       {#each myListMovies as { imdbId, title, posterUrl }}
         <div class="relative group">
           <a href={`${base}/subtitles/${imdbId}`} class="block">
@@ -62,6 +62,14 @@
           {/if}
         </div>
       {/each}
+    </div>
+  {:else}
+    <div class=" px-1 mx-auto max-w-screen-md">
+      <p class="text-white text-xl mt-4">
+        You currently don't have any movies in your list. Would you like to <a class="font-bold text-yellow-500 underline" href={`${base}/search`}
+          >search for a movie</a
+        >?
+      </p>
     </div>
   {/if}
 </TransitionWhenLoaded>
