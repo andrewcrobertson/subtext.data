@@ -6,6 +6,7 @@ export interface Movie {
   rated: string;
   genres: string[];
   actors: string[];
+  directors: string[];
   runTime: number;
   plot: string;
   isOnMyList: boolean;

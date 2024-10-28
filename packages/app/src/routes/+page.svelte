@@ -55,7 +55,7 @@
                 class="flex items-center justify-center w-full h-10 space-x-1 bg-yellow-500 text-white font-bold hover:bg-yellow-600"
                 on:click={() => onRemoveFromListClick(imdbId)}
               >
-                <span>My List</span>
+                <span>Remove</span>
                 <MinusCircleIcon class="text-lg text-white size-6" />
               </button>
             </div>

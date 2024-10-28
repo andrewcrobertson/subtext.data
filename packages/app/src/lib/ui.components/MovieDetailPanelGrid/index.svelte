@@ -4,7 +4,7 @@
   export let movies: T.Movie[];
 </script>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 py-2 overflow-y-auto scrollbar-hide">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-1 py-1 overflow-y-auto scrollbar-hide">
   {#each movies as movie}
     <MovieDetailPanel {movie} on:addclick on:removeclick />
   {/each}

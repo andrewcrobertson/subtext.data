@@ -28,7 +28,7 @@
     <button class="btn btn-square text-white" on:click={handleBackClick}>
       <ArrowLeftIcon class="w-5 h-5" />
     </button>
-    <p class="text-white font-semibold text-lg hidden sm:inline">Request Subtitles</p>
+    <p class="text-white font-semibold text-lg">Request Subtitles</p>
   </div>
 </div>
 <div class="mt-16"></div>

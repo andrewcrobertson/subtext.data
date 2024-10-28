@@ -37,24 +37,23 @@
 </script>
 
 <div class="fixed top-0 left-0 right-0 flex items-center justify-between p-4 z-10 bg-black bg-opacity-70 border-b-2 border-yellow-500 h-14">
-  <div class="flex space-x-4">
+  <div class="flex space-x-4 items-center">
     <button class="btn btn-square text-white" on:click={handleBackClick}>
       <ArrowLeftIcon class="size-5" />
     </button>
-    <p class="text-white font-semibold text-lg hidden sm:inline">Search</p>
+    <p class="text-white font-semibold text-lg">Search</p>
   </div>
-  <div class="flex space-x-2">
-    <div class="flex items-center">
-      <input
-        type="text"
-        class="w-full h-6 p-1 bg-gray-800 text-white text-sm border border-gray-700 focus:outline-none focus:border-yellow-500 mr-1"
-        placeholder="Search for a movie"
-        bind:value={searchQuery}
-      />
-      <MagnifyingGlassIcon class="text-white size-5" />
-    </div>
+  <div class="flex space-x-2 items-center w-1/2 sm:w-1/3 md:w-1/4">
+    <input
+      type="text"
+      class="w-full h-6 p-1 bg-gray-800 text-white text-sm border border-gray-700 focus:outline-none focus:border-yellow-500"
+      placeholder="Find a movie"
+      bind:value={searchQuery}
+    />
+    <MagnifyingGlassIcon class="text-white size-5" />
   </div>
 </div>
+
 <div class="mt-16"></div>
 <TransitionWhenLoaded {loaded}>
   {#if searchQuery.length === 0}
