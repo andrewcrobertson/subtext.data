@@ -11,18 +11,15 @@
 
   let searchQuery = '';
   let recentMovies: Movie[] = [];
-  let currentMovies: Movie[] = [];
   let filteredMovies: Movie[] = [];
   let loaded = false;
 
   const updateIsOnMyList = async (imdbId: string, isOnMyList: boolean) => {
     await searchService.updateIsOnMyList(imdbId, isOnMyList);
-    const idx1 = findIndex(currentMovies, (m) => m.imdbId === imdbId);
-    const idx2 = findIndex(recentMovies, (m) => m.imdbId === imdbId);
-    const idx3 = findIndex(filteredMovies, (m) => m.imdbId === imdbId);
-    if (idx1 !== -1) currentMovies[idx1].isOnMyList = isOnMyList;
-    if (idx2 !== -1) recentMovies[idx2].isOnMyList = isOnMyList;
-    if (idx3 !== -1) filteredMovies[idx3].isOnMyList = isOnMyList;
+    const idx1 = findIndex(recentMovies, (m) => m.imdbId === imdbId);
+    const idx2 = findIndex(filteredMovies, (m) => m.imdbId === imdbId);
+    if (idx1 !== -1) recentMovies[idx1].isOnMyList = isOnMyList;
+    if (idx2 !== -1) filteredMovies[idx2].isOnMyList = isOnMyList;
   };
 
   $: handleQueryChange(searchQuery);
@@ -33,7 +30,6 @@
 
   onMount(async () => {
     const loadRes = await searchService.load();
-    currentMovies = loadRes.currentMovies;
     recentMovies = loadRes.recentMovies;
     loaded = true;
   });
@@ -51,15 +47,10 @@
 <div class="mt-16"></div>
 <TransitionWhenLoaded {loaded}>
   {#if searchQuery.length === 0}
-    {#if currentMovies.length > 0}
-      <h2 class="text-white text-xl md:text-2xl lg:text-3xl font-semibold">Current</h2>
-      <MovieDetailPanelGrid movies={currentMovies} on:addclick={handleAddClick} on:removeclick={handleRemoveClick} />
-    {/if}
     {#if recentMovies.length > 0}
-      <h2 class="text-white text-xl md:text-2xl lg:text-3xl font-semibold">Suggested</h2>
       <MovieDetailPanelGrid movies={recentMovies} on:addclick={handleAddClick} on:removeclick={handleRemoveClick} />
     {/if}
-    {#if currentMovies.length + recentMovies.length === 0}
+    {#if recentMovies.length === 0}
       <p class="text-white text-xl mt-4">
         There are no movies in the database. Would you like to <a class="font-bold text-yellow-500" href={`${base}/request?q=${searchQuery}`}>request</a> one?
       </p>

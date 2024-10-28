@@ -8,6 +8,7 @@
   import type { LoadOutputMyListMovie } from '$lib/ui.services/HomeService.types';
   import { findIndex } from 'lodash-es';
   import { onMount, tick } from 'svelte';
+  import { fade } from 'svelte/transition';
 
   let myListMovies: LoadOutputMyListMovie[] = [];
   let loaded = false;
@@ -48,7 +49,7 @@
             <img src={posterUrl} alt={title} class="w-full" />
           </a>
           {#if mode === Mode.Edit}
-            <div class="absolute inset-x-0 bottom-0 bg-red-500 bg-opacity-70 text-white p-2">
+            <div transition:fade={{ duration: 500 }} class="absolute inset-x-0 bottom-0 bg-black bg-opacity-70 text-white p-2">
               <button class="w-full flex items-center justify-center space-x-1 text-white" on:click={() => onRemoveFromListClick(imdbId)}>
                 <span>Remove</span>
                 <MinusCircleIcon class="text-lg" />

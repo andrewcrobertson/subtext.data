@@ -13,7 +13,6 @@ export class SearchService {
   public async load(): Promise<T.LoadOutput> {
     const index = await this.api.getIndex();
     const myListMovieIds = await this.myListMovieIdManager.get();
-    const currentMovies: T.LoadOutputCurrentMovie[] = [];
     const recentMovies: T.LoadOutputRecentMovie[] = [];
 
     console.log(myListMovieIds);
@@ -22,16 +21,12 @@ export class SearchService {
       const imdbId = index[i].imdbId;
       const movie = await this.api.getMovieData(imdbId);
       gotNRecentMovies = recentMovies.length > this.showNRecentMovies;
-      if (includes(myListMovieIds, movie!.imdbId)) {
-        currentMovies.push({ ...movie!, isOnMyList: true });
-      } else {
-        if (!gotNRecentMovies) recentMovies.push({ ...movie!, isOnMyList: false });
-      }
-
-      if (gotNRecentMovies && currentMovies.length === myListMovieIds.length) break;
+      const isOnMyList = includes(myListMovieIds, movie!.imdbId);
+      if (!gotNRecentMovies) recentMovies.push({ ...movie!, isOnMyList });
+      if (gotNRecentMovies) break;
     }
 
-    return { currentMovies, recentMovies };
+    return { recentMovies };
   }
 
   public async search(query: string): Promise<T.SearchOutput[]> {
