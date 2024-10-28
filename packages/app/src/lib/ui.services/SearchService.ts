@@ -15,7 +15,6 @@ export class SearchService {
     const myListMovieIds = await this.myListMovieIdManager.get();
     const recentMovies: T.LoadOutputRecentMovie[] = [];
 
-    console.log(myListMovieIds);
     let gotNRecentMovies = false;
     for (let i = 0; i < index.length; i++) {
       const imdbId = index[i].imdbId;

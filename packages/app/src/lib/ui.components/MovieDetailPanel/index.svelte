@@ -35,19 +35,19 @@
     </div>
     {#if movie.isOnMyList}
       <button
-        class="flex items-center justify-center w-full h-10 space-x-1 bg-yellow-500 text-black font-bold hover:bg-yellow-600"
+        class="flex items-center justify-center w-full h-10 space-x-1 bg-yellow-500 text-white font-bold hover:bg-yellow-600"
         on:click={() => onRemoveFromListClick(movie.imdbId)}
       >
-        <span>My List&nbsp;</span>
-        <MinusCircleIcon class="text-lg text-black size-6" />
+        <span>My List</span>
+        <MinusCircleIcon class="text-lg text-white size-6" />
       </button>
     {:else}
       <button
-        class="flex items-center justify-center w-full h-10 space-x-1 bg-yellow-500 text-black font-bold hover:bg-yellow-600"
+        class="flex items-center justify-center w-full h-10 space-x-1 bg-yellow-500 text-white font-bold hover:bg-yellow-600"
         on:click={() => onAddToListClick(movie.imdbId)}
       >
-        <span>My List&nbsp;</span>
-        <PlusCircleIcon class="text-lg text-black size-6" />
+        <span>My List</span>
+        <PlusCircleIcon class="text-lg text-white size-6" />
       </button>
     {/if}
   </div>

@@ -50,13 +50,13 @@
             <img src={posterUrl} alt={title} class="w-full" />
           </a>
           {#if mode === Mode.Edit}
-            <div transition:fade={{ duration: 500 }} class="absolute inset-x-0 bottom-0 bg-black bg-opacity-70 text-white p-2">
+            <div transition:fade={{ duration: 500 }} class="absolute inset-x-0 bottom-0">
               <button
-                class="flex items-center justify-center w-full h-10 space-x-1 bg-yellow-500 text-black font-bold hover:bg-yellow-600"
+                class="flex items-center justify-center w-full h-10 space-x-1 bg-yellow-500 text-white font-bold hover:bg-yellow-600"
                 on:click={() => onRemoveFromListClick(imdbId)}
               >
-                <span>My List&nbsp;</span>
-                <MinusCircleIcon class="text-lg text-black size-6" />
+                <span>My List</span>
+                <MinusCircleIcon class="text-lg text-white size-6" />
               </button>
             </div>
           {/if}
