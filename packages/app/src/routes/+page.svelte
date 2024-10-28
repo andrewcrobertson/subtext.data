@@ -1,22 +1,40 @@
 <script lang="ts">
-  import { base } from '$app/paths';  
+  import { base } from '$app/paths';
   import Header from '$lib/ui.components/Header';
+  import PosterLink from '$lib/ui.components/PosterLink';
+  import TransitionWhenLoaded from '$lib/ui.components/TransitionWhenLoaded';
+  import { myListManager } from '$lib/ui.composition/myListManager';
+  import ChevronRightIcon from '$lib/ui.icons/ChevronRightIcon.svelte';
+  import { filter, includes, take } from 'lodash-es';
+  import { onMount } from 'svelte';
   import type { PageData } from './$types';
   export let data: PageData;
+
+  let myListMovies: any[] = [];
+  let loaded = false;
+
+  onMount(async () => {
+    const myListMovieIds = myListManager.get();
+    myListMovies = filter(data.movies, (m) => includes(myListMovieIds, m.id));
+    loaded = true;
+  });
 </script>
 
-<div class="relative max-w-lg mx-auto p-1">
-  <Header class="fixed top-0 left-0 right-0 max-w-lg mx-auto" />
-
-  <!-- Note: scrollbar-hide is a Tailwind custom utility -->
-  <div class="mt-20 grid grid-cols-2 gap-4 pr-2 overflow-y-auto scrollbar-hide">
-    {#each data.movies as { id, title, posterFileName }}
-      <a href={`${base}/view/${id}`} class="group block relative">
-        <img src={`${base}/posters/${posterFileName}`} alt={title} class="w-full h-full object-cover rounded-lg" />
-        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-          <span class="text-white text-lg font-semibold">{title}</span>
-        </div>
+<Header class="fixed top-0 left-0 right-0" />
+<div class="mt-16"></div>
+<TransitionWhenLoaded {loaded}>
+  {#if myListMovies.length > 0}
+    <div class="flex justify-between items-center py-4 px-2">
+      <h2 class="text-white text-xl md:text-2xl lg:text-3xl font-semibold">My List</h2>
+      <a href={`${base}/search`} class="flex items-center text-white text-xl md:text-2xl lg:text-3xl font-semibold">
+        Edit
+        <ChevronRightIcon class="font-semibold" />
       </a>
-    {/each}
-  </div>
-</div>
+    </div>
+    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 pr-2 overflow-y-auto scrollbar-hide">
+      {#each myListMovies as { id, title, posterFileName }}
+        <PosterLink href={`${base}/subtitles/${id}`} src={`${base}/data/${id}/${posterFileName}`} alt={title} />
+      {/each}
+    </div>
+  {/if}
+</TransitionWhenLoaded>

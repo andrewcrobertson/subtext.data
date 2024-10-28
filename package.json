@@ -11,23 +11,24 @@
     "checktypes": "pnpm run -r --workspace-concurrency 1 checktypes",
     "clean": "pnpm run -r clean",
     "dev:app": "pnpm  --filter \"app\" dev",
-    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "dev:download": "dotenvx run -f ./packages/movieCli/.env -- tsx --tsconfig ./packages/movieCli/tsconfig.json ./packages/movieCli/src/index.ts download --meta-dir ./__data__/meta --subtitle-dir ./__data__/subtitles --poster-dir ./__data__/posters",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json,svelte}\"",
     "prepare": "husky",
-    "script:download": "pnpm --filter \"download\" dev:local --data-dir ../../packages/app/src/lib/server.data --poster-dir ../../packages/app/static/posters",
+    "download": "run-s download:*",
+    "download:01": "tsx --tsconfig ./packages/download/tsconfig.json ./packages/download/src/index.ts --meta-dir ./__data__/meta --subtitle-dir ./__data__/subtitles --poster-dir ./__data__/posters",
+    "download:02": "shx cp -r ./__data__/posters ./packages/app/static",
     "test": "pnpm run -r --workspace-concurrency 1 test"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "^1.21.0",
     "@tsconfig/recommended": "^1.0.7",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
-    "npm-check-updates": "^17.1.4",
+    "npm-check-updates": "^17.1.6",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.3.3",
-    "shx": "^0.3.4"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "eciesjs@0.4.9": "patches/eciesjs@0.4.9.patch"
-    }
+    "prettier-plugin-svelte": "^3.2.7",
+    "shx": "^0.3.4",
+    "tsx": "^4.19.2"
   }
 }

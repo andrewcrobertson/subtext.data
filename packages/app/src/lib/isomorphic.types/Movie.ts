@@ -1,8 +1,26 @@
+export interface MovieRaw {
+  imdbId: string;
+  title: string;
+  releaseDate: string | null;
+  releaseYear: number | null;
+  posterFileName: string | null;
+  rated: string | null;
+  genres: string[];
+  directors: string[];
+  writers: string[];
+  actors: string[];
+  runTime: number | null;
+  plot: string | null;
+  subtitleIds: string[];
+  isAvailable: boolean;
+}
+
 export interface MovieSubtitle {
+  source: string;
   author: string | null;
   zipFileName: string | null;
-  srtFileName: string | null;
-  lines: string[];
+  subtitleFileName: string;
+  shaFileName: string;
 }
 
 export interface Movie {
@@ -13,6 +31,8 @@ export interface Movie {
   posterFileName: string | null;
   rated: string | null;
   genres: string[];
+  directors: string[];
+  writers: string[];
   actors: string[];
   runTime: number | null;
   plot: string | null;
