@@ -28,6 +28,8 @@
     } catch {
       myListMovies = myListMovies;
     }
+
+    if (myListMovies.length === 0) mode = Mode.Normal;
   };
 
   onMount(async () => {
@@ -37,7 +39,7 @@
   });
 </script>
 
-<Header class="fixed top-0 left-0 right-0" {mode} on:modechange={handleModeChange} />
+<Header class="fixed top-0 left-0 right-0" {mode} allowEdit={myListMovies.length > 0} on:modechange={handleModeChange} />
 <div class="mt-16"></div>
 
 <TransitionWhenLoaded {loaded}>

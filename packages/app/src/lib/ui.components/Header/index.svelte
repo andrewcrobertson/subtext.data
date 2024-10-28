@@ -12,8 +12,9 @@
   import { twMerge } from 'tailwind-merge';
   import * as T from './types';
   export { _class as class };
-
   export let mode: T.Mode = T.Mode.Normal;
+  export let allowEdit = false;
+
   const dispatch = createEventDispatcher();
 
   const onEditClick = () => {
@@ -52,10 +53,12 @@
       </a>
     </div>
     <div class="flex space-x-4">
-      <button class="flex items-center" on:click={onEditClick}>
-        <PencilSquareIcon class="text-white w-5 h-5" />
-        <p class="text-white text-sm hidden sm:inline">Edit</p>
-      </button>
+      {#if allowEdit}
+        <button class="flex items-center" on:click={onEditClick}>
+          <PencilSquareIcon class="text-white w-5 h-5" />
+          <p class="text-white text-sm hidden sm:inline">Edit</p>
+        </button>
+      {/if}
       <a href={`${base}/request`} class="flex items-center">
         <PlusIcon class="text-white w-5 h-5" />
         <p class="text-white text-sm hidden sm:inline">Request</p>
