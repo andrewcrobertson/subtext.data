@@ -25,8 +25,14 @@
 {#if mode === T.Mode.Edit}
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div class={twMerge('flex justify-between items-center p-4 z-10 bg-yellow-500 border-b-2 border-yellow-500', _class)} on:click={onEditClick}>
-    <p class="font-semibold text-lg text-white">Edit</p>
+  <div transition:fade class={twMerge('flex justify-between items-center p-4 z-10 bg-yellow-500 border-b-2 border-yellow-500', _class)} on:click={onEditClick}>
+    <div class="flex space-x-4">
+      <div class="flex items-center">
+        <ChatBubbleLeftRightIcon class="text-black w-6 h-6 mr-2" />
+        <p class="font-semibold text-lg text-black hidden sm:block">SubText</p>
+      </div>
+      <p class="font-semibold text-xl text-white">Edit</p>
+    </div>
     <div class="flex space-x-4">
       <button class="flex items-center">
         <XMarkIcon class="font-semibold text-lg text-white size-6" />
@@ -34,7 +40,7 @@
     </div>
   </div>
 {:else}
-  <div class={twMerge('flex justify-between items-center p-4 z-10 bg-black bg-opacity-80 border-b-2 border-yellow-500', _class)}>
+  <div transition:fade class={twMerge('flex justify-between items-center p-4 z-10 bg-black bg-opacity-80 border-b-2 border-yellow-500', _class)}>
     <div class="flex space-x-4">
       <div class="flex items-center">
         <ChatBubbleLeftRightIcon class="text-yellow-500 w-6 h-6 mr-2" />
