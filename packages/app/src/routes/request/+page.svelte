@@ -28,14 +28,14 @@
     <button class="btn btn-square text-white" on:click={handleBackClick}>
       <ArrowLeftIcon class="w-5 h-5" />
     </button>
-    <p class="text-white font-semibold text-lg">Request Subtitles</p>
+    <p class="text-white font-semibold text-lg">Request a Movie</p>
   </div>
 </div>
 <div class="mt-16"></div>
 <div class="p-4 mx-auto max-w-screen-md text-white">
   <div class="pb-10">
     <p class="text-lg mb-4">
-      To request subtitles, <a class="font-bold text-yellow-500 underline" href={requestService.getImdbQueryUrl(query)}>search for the movie on IMDb</a> and
+      To request a movie, <a class="font-bold text-yellow-500 underline" href={requestService.getImdbQueryUrl(query)}>search for the movie on IMDb</a> and
       submit the movie’s IMDb URL or ID below. For more information, read about
       <a class="font-bold text-yellow-500 underline" href="https://developer.imdb.com/documentation/key-concepts" target="_blank">IMDb data concepts</a>.
     </p>

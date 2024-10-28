@@ -64,7 +64,8 @@
       {/each}
     </div>
   {:else}
-    <div class=" px-1 mx-auto max-w-screen-md">
+    <div class="px-1 mx-auto max-w-screen-md">
+      <h2 class="text-2xl font-bold text-white mt-6">No Movies</h2>
       <p class="text-white text-xl mt-4">
         You currently don't have any movies in your list. Would you like to <a class="font-bold text-yellow-500 underline" href={`${base}/search`}
           >search for a movie</a

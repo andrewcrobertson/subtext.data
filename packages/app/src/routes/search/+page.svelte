@@ -7,6 +7,7 @@
   import ArrowLeftIcon from '$lib/ui.icons/ArrowLeftIcon.svelte';
   import MagnifyingGlassIcon from '$lib/ui.icons/MagnifyingGlassIcon.svelte';
   import PlusIcon from '$lib/ui.icons/PlusIcon.svelte';
+  import ShieldExclamationIcon from '$lib/ui.icons/ShieldExclamationIcon.svelte';
   import { findIndex } from 'lodash-es';
   import { onMount } from 'svelte';
 
@@ -63,9 +64,8 @@
     {#if recentMovies.length === 0}
       <div class=" px-1 mx-auto max-w-screen-md">
         <p class="text-white text-xl mt-4">
-          No movies found in the database. Would you like to <a class="font-bold text-yellow-500 underline" href={`${base}/request?q=${searchQuery}`}
-            >request a movie?</a
-          >
+          There are currently no movies in the database. Would you like to
+          <a class="font-bold text-yellow-500 underline" href={`${base}/request?q=${searchQuery}`}>request a movie?</a>
         </p>
       </div>
     {/if}
@@ -73,15 +73,17 @@
     <MovieDetailPanelGrid movies={filteredMovies} on:addclick={handleAddClick} on:removeclick={handleRemoveClick} />
     <div class=" px-1 mx-auto max-w-screen-md">
       <p class="text-white text-xl mt-4">
-        Not quite what you wanted? <a class="font-bold text-yellow-500 underline" href={`${base}/request?q=${searchQuery}`}>Request it here!</a>
+        Couldn't find the movie you wanted? Would you like to <a class="font-bold text-yellow-500 underline" href={`${base}/request?q=${searchQuery}`}
+          >request it</a
+        >?
       </p>
     </div>
   {:else}
     <div class=" px-1 mx-auto max-w-screen-md">
       <p class="text-white text-xl mt-4">
-        Sorry, no matches found. Would you like to <a class="font-bold text-yellow-500 underline" href={`${base}/request?q=${searchQuery}`}
-          >request this movie?</a
-        >
+        Sorry, we couldn't find the movie you wanted. Would you like to <a class="font-bold text-yellow-500 underline" href={`${base}/request?q=${searchQuery}`}
+          >request it</a
+        >?
       </p>
     </div>
   {/if}
