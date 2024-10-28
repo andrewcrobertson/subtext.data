@@ -4,34 +4,29 @@
   import type { Movie, MyListEventDetail } from '$lib/ui.components/MovieDetailPanelGrid/types';
   import TransitionWhenLoaded from '$lib/ui.components/TransitionWhenLoaded';
   import { searchService } from '$lib/ui.composition/searchService';
-  import { myListManager } from '$lib/ui.composition/myListManager';
   import ArrowLeftIcon from '$lib/ui.icons/ArrowLeftIcon.svelte';
   import MagnifyingGlassIcon from '$lib/ui.icons/MagnifyingGlassIcon.svelte';
+  import { findIndex } from 'lodash-es';
   import { onMount } from 'svelte';
 
+  let searchQuery = '';
   let recentMovies: Movie[] = [];
   let currentMovies: Movie[] = [];
+  let filteredMovies: Movie[] = [];
   let loaded = false;
-  let searchQuery = '';
-  // $: filteredMovies = await getFilteredMovies(searchQuery);
 
-  const getFilteredMovies = async (searchQuery: string) => await searchService.search(searchQuery);
-
-  const updateIsOnMyList = (imdbId: string, isOnMyList: boolean) => {
-    if (isOnMyList) {
-      myListManager.add(imdbId);
-    } else {
-      myListManager.remove(imdbId);
-    }
-
-    // const idx1 = findIndex(currentMovies, (m) => m.imdbId === imdbId);
-    // if (idx1 !== -1) currentMovies[idx1].isOnMyList = isOnMyList;
-    // const idx2 = findIndex(filteredMovies, (m) => m.imdbId === imdbId);
-    // if (idx2 !== -1) filteredMovies[idx2].isOnMyList = isOnMyList;
-    // const idx3 = findIndex(recentMovies, (m) => m.imdbId === imdbId);
-    // if (idx3 !== -1) recentMovies[idx3].isOnMyList = isOnMyList;
+  const updateIsOnMyList = async (imdbId: string, isOnMyList: boolean) => {
+    await searchService.updateIsOnMyList(imdbId, isOnMyList);
+    const idx1 = findIndex(currentMovies, (m) => m.imdbId === imdbId);
+    const idx2 = findIndex(recentMovies, (m) => m.imdbId === imdbId);
+    const idx3 = findIndex(filteredMovies, (m) => m.imdbId === imdbId);
+    if (idx1 !== -1) currentMovies[idx1].isOnMyList = isOnMyList;
+    if (idx2 !== -1) recentMovies[idx2].isOnMyList = isOnMyList;
+    if (idx3 !== -1) filteredMovies[idx3].isOnMyList = isOnMyList;
   };
 
+  $: handleQueryChange(searchQuery);
+  const handleQueryChange = async (searchQuery: string) => (filteredMovies = await searchService.search(searchQuery));
   const handleBackClick = ({}: MouseEvent) => history.back();
   const handleAddClick = ({ detail }: CustomEvent<MyListEventDetail>) => updateIsOnMyList(detail.id, true);
   const handleRemoveClick = ({ detail }: CustomEvent<MyListEventDetail>) => updateIsOnMyList(detail.id, false);
@@ -69,11 +64,11 @@
         There are no movies in the database. Would you like to <a class="font-bold text-yellow-500" href={`${base}/request?q=${searchQuery}`}>request</a> one?
       </p>
     {/if}
-    <!-- {:else if filteredMovies.length > 0}
+  {:else if filteredMovies.length > 0}
     <MovieDetailPanelGrid movies={filteredMovies} on:addclick={handleAddClick} on:removeclick={handleRemoveClick} />
     <p class="text-white text-xl mt-4">
       Not what you were looking for? Would you like to <a class="font-bold text-yellow-500" href={`${base}/request?q=${searchQuery}`}>request</a> it?
-    </p> -->
+    </p>
   {:else}
     <p class="text-white text-xl mt-4">
       Sorry, we couldn't find a matching movie in the database. Would you like to <a class="font-bold text-yellow-500" href={`${base}/request?q=${searchQuery}`}

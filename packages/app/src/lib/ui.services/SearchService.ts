@@ -34,6 +34,8 @@ export class SearchService {
   }
 
   public async search(query: string): Promise<T.SearchOutput[]> {
+    if (query === '') return [];
+
     const index = await this.api.getIndex();
     const myListMovieIds = this.myListManager.get();
     const matchingMovies: T.SearchOutput[] = [];
@@ -49,5 +51,13 @@ export class SearchService {
     }
 
     return matchingMovies;
+  }
+
+  public async updateIsOnMyList(imdbId: string, isOnMyList: boolean): Promise<void> {
+    if (isOnMyList) {
+      this.myListManager.add(imdbId);
+    } else {
+      this.myListManager.remove(imdbId);
+    }
   }
 }
