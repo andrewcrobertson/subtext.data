@@ -51,9 +51,12 @@
           </a>
           {#if mode === Mode.Edit}
             <div transition:fade={{ duration: 500 }} class="absolute inset-x-0 bottom-0 bg-black bg-opacity-70 text-white p-2">
-              <button class="w-full flex items-center justify-center space-x-1 text-white" on:click={() => onRemoveFromListClick(imdbId)}>
-                <span>Remove</span>
-                <MinusCircleIcon class="text-lg" />
+              <button
+                class="flex items-center justify-center w-full h-10 space-x-1 bg-yellow-500 text-black font-bold hover:bg-yellow-600"
+                on:click={() => onRemoveFromListClick(imdbId)}
+              >
+                <span>My List&nbsp;</span>
+                <MinusCircleIcon class="text-lg text-black size-6" />
               </button>
             </div>
           {/if}

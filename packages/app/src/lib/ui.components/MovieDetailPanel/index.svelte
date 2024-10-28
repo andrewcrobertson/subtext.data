@@ -34,14 +34,20 @@
       <p class="text-sm text-gray-400">Runtime: {formatRunTime(movie.runTime, 'Unknown')}</p>
     </div>
     {#if movie.isOnMyList}
-      <button class="btn btn-square text-white w-full flex items-center" on:click={() => onRemoveFromListClick(movie.imdbId)}>
+      <button
+        class="flex items-center justify-center w-full h-10 space-x-1 bg-yellow-500 text-black font-bold hover:bg-yellow-600"
+        on:click={() => onRemoveFromListClick(movie.imdbId)}
+      >
         <span>My List&nbsp;</span>
-        <MinusCircleIcon class="text-lg text-white size-8" />
+        <MinusCircleIcon class="text-lg text-black size-6" />
       </button>
     {:else}
-      <button class="btn btn-square text-white w-full flex items-center" on:click={() => onAddToListClick(movie.imdbId)}>
+      <button
+        class="flex items-center justify-center w-full h-10 space-x-1 bg-yellow-500 text-black font-bold hover:bg-yellow-600"
+        on:click={() => onAddToListClick(movie.imdbId)}
+      >
         <span>My List&nbsp;</span>
-        <PlusCircleIcon class="text-lg text-white size-8" />
+        <PlusCircleIcon class="text-lg text-black size-6" />
       </button>
     {/if}
   </div>
