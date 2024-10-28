@@ -6,7 +6,8 @@
   import { homeService } from '$lib/ui.composition/homeService';
   import MinusCircleIcon from '$lib/ui.icons/MinusCircleIcon.svelte';
   import type { LoadOutputMyListMovie } from '$lib/ui.services/HomeService.types';
-  import { onMount } from 'svelte';
+  import { findIndex } from 'lodash-es';
+  import { onMount, tick } from 'svelte';
 
   let myListMovies: LoadOutputMyListMovie[] = [];
   let loaded = false;
@@ -14,9 +15,18 @@
 
   const handleModeChange = ({ detail }: CustomEvent<ModeChangeEventDetail>) => (mode = detail.mode);
 
-  const onRemoveFromListClick = (imdbId: string) => {
-    //myListMovies = myListMovies.filter(movie => movie.imdbId !== imdbId);
-    console.log(imdbId);
+  const onRemoveFromListClick = async (imdbId: string) => {
+    await homeService.removeFromMyList(imdbId);
+    const idx = findIndex(myListMovies, (m) => m.imdbId === imdbId);
+    myListMovies.splice(idx, 1);
+    try {
+      document.startViewTransition(async () => {
+        myListMovies = myListMovies;
+        await tick();
+      });
+    } catch {
+      myListMovies = myListMovies;
+    }
   };
 
   onMount(async () => {
@@ -38,10 +48,10 @@
             <img src={posterUrl} alt={title} class="w-full" />
           </a>
           {#if mode === Mode.Edit}
-            <div class="absolute bottom-0 left-0 right-0 bg-red-500 bg-opacity-70 text-white text-center p-2">
-              <button class="btn text-white w-full flex items-center" on:click={() => onRemoveFromListClick(imdbId)}>
-                <span>Remove&nbsp;</span>
-                <MinusCircleIcon class="text-lg text-white size-8" />
+            <div class="absolute inset-x-0 bottom-0 bg-red-500 bg-opacity-70 text-white p-2">
+              <button class="w-full flex items-center justify-center space-x-1 text-white" on:click={() => onRemoveFromListClick(imdbId)}>
+                <span>Remove</span>
+                <MinusCircleIcon class="text-lg" />
               </button>
             </div>
           {/if}

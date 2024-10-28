@@ -15,4 +15,8 @@ export class HomeService {
     const myListMovies = filter(index, (m) => includes(myListMovieIds, m.imdbId));
     return { myListMovies };
   }
+
+  public async removeFromMyList(imdbId: string): Promise<void> {
+    await this.myListMovieIdManager.remove(imdbId);
+  }
 }
