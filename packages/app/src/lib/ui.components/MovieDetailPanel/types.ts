@@ -1,8 +1,8 @@
 export interface Movie {
-  id: string;
+  imdbId: string;
   title: string;
   releaseDate: string;
-  posterFileName: string;
+  posterUrl: string;
   rated: string;
   genres: string[];
   actors: string[];

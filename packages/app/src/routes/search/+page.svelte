@@ -1,6 +1,5 @@
 <script lang="ts">
   import { base } from '$app/paths';
-  import { showNRecentMovies } from '$lib/isomorphic.constants/movies';
   import MovieDetailPanelGrid from '$lib/ui.components/MovieDetailPanelGrid';
   import type { Movie, MyListEventDetail } from '$lib/ui.components/MovieDetailPanelGrid/types';
   import TransitionWhenLoaded from '$lib/ui.components/TransitionWhenLoaded';
@@ -8,35 +7,15 @@
   import { myListManager } from '$lib/ui.composition/myListManager';
   import ArrowLeftIcon from '$lib/ui.icons/ArrowLeftIcon.svelte';
   import MagnifyingGlassIcon from '$lib/ui.icons/MagnifyingGlassIcon.svelte';
-  import { includes, findIndex } from 'lodash-es';
   import { onMount } from 'svelte';
-  import type { PageData } from './$types';
-  export let data: PageData;
 
   let recentMovies: Movie[] = [];
-  let myListMovies: Movie[] = [];
+  let currentMovies: Movie[] = [];
   let loaded = false;
-
   let searchQuery = '';
-  $: filteredMovies = getFilteredMovies(searchQuery);
+  // $: filteredMovies = await getFilteredMovies(searchQuery);
 
-  const getFilteredMovies = (searchQuery: string) => {
-    const matches = data.movies.filter((movie) => movie.title.toLowerCase().includes(searchQuery.toLowerCase()));
-    const filteredMovies = mapMovies(matches);
-    return filteredMovies;
-  };
-
-  const mapMovies = (movies: Omit<Movie, 'isOnMyList'>[]) => {
-    const filteredMovies: Movie[] = [];
-    const myListMovieIds = myListManager.get();
-    for (let i = 0; i < movies.length; i++) {
-      const movie = movies[i];
-      const isOnMyList = includes(myListMovieIds, movie.id);
-      filteredMovies.push({ ...movie, isOnMyList });
-    }
-
-    return filteredMovies;
-  };
+  const getFilteredMovies = async (searchQuery: string) => await searchService.search(searchQuery);
 
   const updateIsOnMyList = (imdbId: string, isOnMyList: boolean) => {
     if (isOnMyList) {
@@ -45,12 +24,12 @@
       myListManager.remove(imdbId);
     }
 
-    const idx1 = findIndex(myListMovies, (m) => m.id === imdbId);
-    if (idx1 !== -1) myListMovies[idx1].isOnMyList = isOnMyList;
-    const idx2 = findIndex(filteredMovies, (m) => m.id === imdbId);
-    if (idx2 !== -1) filteredMovies[idx2].isOnMyList = isOnMyList;
-    const idx3 = findIndex(recentMovies, (m) => m.id === imdbId);
-    if (idx3 !== -1) recentMovies[idx3].isOnMyList = isOnMyList;
+    // const idx1 = findIndex(currentMovies, (m) => m.imdbId === imdbId);
+    // if (idx1 !== -1) currentMovies[idx1].isOnMyList = isOnMyList;
+    // const idx2 = findIndex(filteredMovies, (m) => m.imdbId === imdbId);
+    // if (idx2 !== -1) filteredMovies[idx2].isOnMyList = isOnMyList;
+    // const idx3 = findIndex(recentMovies, (m) => m.imdbId === imdbId);
+    // if (idx3 !== -1) recentMovies[idx3].isOnMyList = isOnMyList;
   };
 
   const handleBackClick = ({}: MouseEvent) => history.back();
@@ -59,7 +38,7 @@
 
   onMount(async () => {
     const loadRes = await searchService.load();
-    myListMovies = loadRes.currentMovies;
+    currentMovies = loadRes.currentMovies;
     recentMovies = loadRes.recentMovies;
     loaded = true;
   });
@@ -77,24 +56,24 @@
 <div class="mt-16"></div>
 <TransitionWhenLoaded {loaded}>
   {#if searchQuery.length === 0}
-    {#if myListMovies.length > 0}
+    {#if currentMovies.length > 0}
       <h2 class="text-white text-xl md:text-2xl lg:text-3xl font-semibold">Current</h2>
-      <MovieDetailPanelGrid movies={myListMovies} on:addclick={handleAddClick} on:removeclick={handleRemoveClick} />
+      <MovieDetailPanelGrid movies={currentMovies} on:addclick={handleAddClick} on:removeclick={handleRemoveClick} />
     {/if}
     {#if recentMovies.length > 0}
       <h2 class="text-white text-xl md:text-2xl lg:text-3xl font-semibold">Suggested</h2>
       <MovieDetailPanelGrid movies={recentMovies} on:addclick={handleAddClick} on:removeclick={handleRemoveClick} />
     {/if}
-    {#if myListMovies.length + recentMovies.length === 0}
+    {#if currentMovies.length + recentMovies.length === 0}
       <p class="text-white text-xl mt-4">
         There are no movies in the database. Would you like to <a class="font-bold text-yellow-500" href={`${base}/request?q=${searchQuery}`}>request</a> one?
       </p>
     {/if}
-  {:else if filteredMovies.length > 0}
+    <!-- {:else if filteredMovies.length > 0}
     <MovieDetailPanelGrid movies={filteredMovies} on:addclick={handleAddClick} on:removeclick={handleRemoveClick} />
     <p class="text-white text-xl mt-4">
       Not what you were looking for? Would you like to <a class="font-bold text-yellow-500" href={`${base}/request?q=${searchQuery}`}>request</a> it?
-    </p>
+    </p> -->
   {:else}
     <p class="text-white text-xl mt-4">
       Sorry, we couldn't find a matching movie in the database. Would you like to <a class="font-bold text-yellow-500" href={`${base}/request?q=${searchQuery}`}

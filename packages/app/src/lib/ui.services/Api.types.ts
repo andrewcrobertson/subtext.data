@@ -22,23 +22,11 @@ export interface ApiGetMovieDataOutput {
   isAvailable: boolean;
 }
 
-export interface GetIndexOutput {
-  imdbId: string;
-  title: string;
+export interface GetIndexOutput extends Omit<ApiGetIndexOutput, 'posterFileName'> {
   posterUrl: string;
-  subtitleCount: number;
 }
 
-export interface GetMovieDataOutput {
-  imdbId: string;
-  title: string;
-  releaseDate: string;
+export interface GetMovieDataOutput extends Omit<ApiGetMovieDataOutput, 'posterFileName' | 'subtitleIds'> {
   posterUrl: string;
-  rated: string;
-  genres: string[];
-  actors: string[];
-  runTime: number;
-  plot: string;
   subtitleCount: number;
-  isAvailable: boolean;
 }

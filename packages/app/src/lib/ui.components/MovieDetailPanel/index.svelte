@@ -21,8 +21,8 @@
 </script>
 
 <div class="flex items-start overflow-hidden">
-  <a href={`${base}/subtitles/${movie.id}`} class="w-1/2">
-    <img src={`${base}/data/${movie.id}/${movie.posterFileName}`} alt={movie.title} class="w-full h-auto" />
+  <a href={`${base}/subtitles/${movie.imdbId}`} class="w-1/2">
+    <img src={movie.posterUrl} alt={movie.title} class="w-full h-auto" />
   </a>
   <div class="pl-4 w-1/2 flex flex-col justify-between h-full">
     <div>
@@ -34,12 +34,12 @@
       <p class="text-sm text-gray-400">Runtime: {formatRunTime(movie.runTime, 'Unknown')}</p>
     </div>
     {#if movie.isOnMyList}
-      <button class="btn btn-square text-white w-full flex items-center" on:click={() => onRemoveFromListClick(movie.id)}>
+      <button class="btn btn-square text-white w-full flex items-center" on:click={() => onRemoveFromListClick(movie.imdbId)}>
         <span>My List&nbsp;</span>
         <MinusCircleIcon class="text-lg text-white size-8" />
       </button>
     {:else}
-      <button class="btn btn-square text-white w-full flex items-center" on:click={() => onAddToListClick(movie.id)}>
+      <button class="btn btn-square text-white w-full flex items-center" on:click={() => onAddToListClick(movie.imdbId)}>
         <span>My List&nbsp;</span>
         <PlusCircleIcon class="text-lg text-white size-8" />
       </button>
