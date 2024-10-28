@@ -62,22 +62,28 @@
       <MovieDetailPanelGrid movies={recentMovies} on:addclick={handleAddClick} on:removeclick={handleRemoveClick} />
     {/if}
     {#if recentMovies.length === 0}
-      <p class="text-white text-xl mt-4">
-        No movies found in the database. Would you like to <a class="font-bold text-yellow-500 hover:underline" href={`${base}/request?q=${searchQuery}`}
-          >request a movie?</a
-        >
-      </p>
+      <div class=" px-1 mx-auto max-w-screen-md">
+        <p class="text-white text-xl mt-4">
+          No movies found in the database. Would you like to <a class="font-bold text-yellow-500 underline" href={`${base}/request?q=${searchQuery}`}
+            >request a movie?</a
+          >
+        </p>
+      </div>
     {/if}
   {:else if filteredMovies.length > 0}
     <MovieDetailPanelGrid movies={filteredMovies} on:addclick={handleAddClick} on:removeclick={handleRemoveClick} />
-    <p class="text-white text-xl mt-4">
-      Not quite what you wanted? <a class="font-bold text-yellow-500 hover:underline" href={`${base}/request?q=${searchQuery}`}>Request it here!</a>
-    </p>
+    <div class=" px-1 mx-auto max-w-screen-md">
+      <p class="text-white text-xl mt-4">
+        Not quite what you wanted? <a class="font-bold text-yellow-500 underline" href={`${base}/request?q=${searchQuery}`}>Request it here!</a>
+      </p>
+    </div>
   {:else}
-    <p class="text-white text-xl mt-4">
-      Sorry, no matches found. Would you like to <a class="font-bold text-yellow-500 hover:underline" href={`${base}/request?q=${searchQuery}`}
-        >request this movie?</a
-      >
-    </p>
+    <div class=" px-1 mx-auto max-w-screen-md">
+      <p class="text-white text-xl mt-4">
+        Sorry, no matches found. Would you like to <a class="font-bold text-yellow-500 underline" href={`${base}/request?q=${searchQuery}`}
+          >request this movie?</a
+        >
+      </p>
+    </div>
   {/if}
 </TransitionWhenLoaded>
