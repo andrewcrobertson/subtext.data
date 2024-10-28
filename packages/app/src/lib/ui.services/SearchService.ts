@@ -7,15 +7,16 @@ export class SearchService {
   public constructor(
     private readonly showNRecentMovies: number,
     private readonly api: Api,
-    private readonly myListManager: MyListMovieIdManager
+    private readonly myListMovieIdManager: MyListMovieIdManager
   ) {}
 
   public async load(): Promise<T.LoadOutput> {
     const index = await this.api.getIndex();
-    const myListMovieIds = this.myListManager.get();
+    const myListMovieIds = await this.myListMovieIdManager.get();
     const currentMovies: T.LoadOutputCurrentMovie[] = [];
     const recentMovies: T.LoadOutputRecentMovie[] = [];
 
+    console.log(myListMovieIds);
     let gotNRecentMovies = false;
     for (let i = 0; i < index.length; i++) {
       const imdbId = index[i].imdbId;
@@ -24,7 +25,7 @@ export class SearchService {
       if (includes(myListMovieIds, movie!.imdbId)) {
         currentMovies.push({ ...movie!, isOnMyList: true });
       } else {
-        if (!gotNRecentMovies) recentMovies.push({ ...movie!, isOnMyList: true });
+        if (!gotNRecentMovies) recentMovies.push({ ...movie!, isOnMyList: false });
       }
 
       if (gotNRecentMovies && currentMovies.length === myListMovieIds.length) break;
@@ -37,7 +38,7 @@ export class SearchService {
     if (query === '') return [];
 
     const index = await this.api.getIndex();
-    const myListMovieIds = this.myListManager.get();
+    const myListMovieIds = await this.myListMovieIdManager.get();
     const matchingMovies: T.SearchOutput[] = [];
 
     for (let i = 0; i < index.length; i++) {
@@ -55,9 +56,9 @@ export class SearchService {
 
   public async updateIsOnMyList(imdbId: string, isOnMyList: boolean): Promise<void> {
     if (isOnMyList) {
-      this.myListManager.add(imdbId);
+      await this.myListMovieIdManager.add(imdbId);
     } else {
-      this.myListManager.remove(imdbId);
+      await this.myListMovieIdManager.remove(imdbId);
     }
   }
 }

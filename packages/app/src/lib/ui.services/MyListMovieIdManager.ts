@@ -7,14 +7,14 @@ export class MyListMovieIdManager {
     const movies = await this.blobStore.get([]);
     if (movies !== null && !movies.includes(movieId)) {
       movies.push(movieId);
-      this.blobStore.set(movies);
+      await this.blobStore.set(movies);
     }
   }
 
   public async remove(movieId: string): Promise<void> {
     const movies = (await this.blobStore.get([])) ?? [];
     const updatedMovies = movies.filter((id) => id !== movieId);
-    this.blobStore.set(updatedMovies);
+    await this.blobStore.set(updatedMovies);
   }
 
   public async get(): Promise<string[]> {

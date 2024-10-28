@@ -10,7 +10,7 @@ export class MyIdService {
     if (!isNil(myId)) return myId;
 
     const newMyId = guid();
-    this.blobStore.set(newMyId);
+    await this.blobStore.set(newMyId);
     return newMyId;
   }
 }
