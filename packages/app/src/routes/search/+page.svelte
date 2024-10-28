@@ -4,6 +4,7 @@
   import MovieDetailPanelGrid from '$lib/ui.components/MovieDetailPanelGrid';
   import type { Movie, MyListEventDetail } from '$lib/ui.components/MovieDetailPanelGrid/types';
   import TransitionWhenLoaded from '$lib/ui.components/TransitionWhenLoaded';
+  import { searchService } from '$lib/ui.composition/searchService';
   import { myListManager } from '$lib/ui.composition/myListManager';
   import ArrowLeftIcon from '$lib/ui.icons/ArrowLeftIcon.svelte';
   import MagnifyingGlassIcon from '$lib/ui.icons/MagnifyingGlassIcon.svelte';
@@ -57,19 +58,9 @@
   const handleRemoveClick = ({ detail }: CustomEvent<MyListEventDetail>) => updateIsOnMyList(detail.id, false);
 
   onMount(async () => {
-    let tempMyListMovies: any[] = [];
-    let tempRecentMovies: Omit<Movie, 'isOnMyList'>[] = [];
-    const myListMovieIds = myListManager.get();
-
-    for (let i = 0; i < data.movies.length; i++) {
-      const movie = data.movies[i];
-      const isOnMyList = includes(myListMovieIds, movie.id);
-      if (isOnMyList) tempMyListMovies.push({ ...movie, isOnMyList });
-      if (!isOnMyList && i < showNRecentMovies) tempRecentMovies.push(movie);
-    }
-
-    myListMovies = tempMyListMovies;
-    recentMovies = mapMovies(tempRecentMovies);
+    const loadRes = await searchService.load();
+    myListMovies = loadRes.currentMovies;
+    recentMovies = loadRes.recentMovies;
     loaded = true;
   });
 </script>

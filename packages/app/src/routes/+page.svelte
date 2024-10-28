@@ -3,16 +3,17 @@
   import Header from '$lib/ui.components/Header';
   import PosterLink from '$lib/ui.components/PosterLink';
   import TransitionWhenLoaded from '$lib/ui.components/TransitionWhenLoaded';
-  import type { GetMyListOutput } from '$lib/ui.services/Gateway.types';
-  import { gateway } from '$lib/ui.composition/gateway';
+  import { homeService } from '$lib/ui.composition/homeService';
   import ChevronRightIcon from '$lib/ui.icons/ChevronRightIcon.svelte';
+  import type { LoadOutputMyListMovie } from '$lib/ui.services/HomeService.types';
   import { onMount } from 'svelte';
 
-  let myListMovies: GetMyListOutput[] = [];
+  let myListMovies: LoadOutputMyListMovie[] = [];
   let loaded = false;
 
   onMount(async () => {
-    myListMovies = await gateway.getMyList();
+    const loadRes = await homeService.load();
+    myListMovies = loadRes.myListMovies;
     loaded = true;
   });
 </script>
