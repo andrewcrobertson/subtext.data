@@ -3,19 +3,16 @@
   import Header from '$lib/ui.components/Header';
   import PosterLink from '$lib/ui.components/PosterLink';
   import TransitionWhenLoaded from '$lib/ui.components/TransitionWhenLoaded';
-  import { myListManager } from '$lib/ui.composition/myListManager';
+  import type { GetMyListOutput } from '$lib/ui.services/Gateway.types';
+  import { gateway } from '$lib/ui.composition/gateway';
   import ChevronRightIcon from '$lib/ui.icons/ChevronRightIcon.svelte';
-  import { filter, includes, take } from 'lodash-es';
   import { onMount } from 'svelte';
-  import type { PageData } from './$types';
-  export let data: PageData;
 
-  let myListMovies: any[] = [];
+  let myListMovies: GetMyListOutput[] = [];
   let loaded = false;
 
   onMount(async () => {
-    const myListMovieIds = myListManager.get();
-    myListMovies = filter(data.movies, (m) => includes(myListMovieIds, m.id));
+    myListMovies = await gateway.getMyList();
     loaded = true;
   });
 </script>
@@ -32,8 +29,8 @@
       </a>
     </div>
     <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 pr-2 overflow-y-auto scrollbar-hide">
-      {#each myListMovies as { id, title, posterFileName }}
-        <PosterLink href={`${base}/subtitles/${id}`} src={`${base}/data/${id}/${posterFileName}`} alt={title} />
+      {#each myListMovies as { imdbId, title, posterUrl }}
+        <PosterLink href={`${base}/subtitles/${imdbId}`} src={posterUrl} alt={title} />
       {/each}
     </div>
   {/if}
