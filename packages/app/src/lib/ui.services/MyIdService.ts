@@ -1,21 +1,16 @@
+import type { BlobStore } from '$lib/isomorphic.services/BlobStore.types';
+import { isNil } from 'lodash-es';
+import { v1 as guid } from 'uuid';
+
 export class MyIdService {
-  public constructor(private readonly obfuscateKey: string) {}
+  constructor(private readonly blobStore: BlobStore<string>) {}
 
-  public async getId() {
-    try {
-      const res = await fetch('https://api.ipify.org/');
-      if (res.ok) return this.obfuscate(await res.text(), this.obfuscateKey);
-    } catch {}
+  public async getMyId(): Promise<string> {
+    const myId = await this.blobStore.get(null);
+    if (!isNil(myId)) return myId;
 
-    return this.obfuscate('Unknown', this.obfuscateKey);
-  }
-
-  private obfuscate(text: string, key: string): string {
-    const ipBytes = new TextEncoder().encode(text);
-    const keyBytes = new TextEncoder().encode(key);
-    const result = ipBytes.map((byte, i) => byte ^ keyBytes[i % keyBytes.length]);
-    return Array.from(result)
-      .map((byte) => byte.toString(16).padStart(2, '0'))
-      .join('');
+    const newMyId = guid();
+    this.blobStore.set(newMyId);
+    return newMyId;
   }
 }

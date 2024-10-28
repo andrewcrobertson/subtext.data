@@ -10,7 +10,7 @@ export class GitHubService {
   public async submitIssue(imdbIdOrUrl: string) {
     try {
       const imdbId = this.parseImdbIdOrUrl(imdbIdOrUrl) ?? 'Unknown';
-      const myId = await this.myIdService.getId();
+      const myId = await this.myIdService.getMyId();
       const lines = [`:id: ${myId}`, ':robot: This issue is automated.', ":pray: Please don't edit this issue."];
       const issueData = { title: imdbId, body: join(lines, '\n'), labels: ['add'] };
 

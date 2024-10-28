@@ -1,3 +1,7 @@
-import { MyListManager } from '$lib/ui.services/MyListManager';
+import { browser } from '$app/environment';
+import { StorageBlobStore } from '$lib/isomorphic.services/StorageBlobStore';
+import { MyListMovieIdManager } from '$lib/ui.services/MyListMovieIdManager';
 
-export const myListManager = new MyListManager();
+const ls = browser && localStorage !== undefined ? localStorage : (undefined as unknown as Storage);
+const blobStore = new StorageBlobStore<string[]>('my-list-movie-ids', ls);
+export const myListManager = new MyListMovieIdManager(blobStore);

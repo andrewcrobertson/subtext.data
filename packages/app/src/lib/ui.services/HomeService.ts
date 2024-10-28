@@ -1,4 +1,4 @@
-import type { MyListManager } from '$lib/ui.services/MyListManager';
+import type { MyListMovieIdManager } from '$lib/ui.services/MyListMovieIdManager';
 import { filter, includes } from 'lodash-es';
 import type { Api } from './Api';
 import type * as T from './HomeService.types';
@@ -6,7 +6,7 @@ import type * as T from './HomeService.types';
 export class HomeService {
   public constructor(
     private readonly api: Api,
-    private readonly myListManager: MyListManager
+    private readonly myListManager: MyListMovieIdManager
   ) {}
 
   public async load(): Promise<T.LoadOutput> {
