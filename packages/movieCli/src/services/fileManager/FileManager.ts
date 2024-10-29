@@ -45,7 +45,8 @@ export class FileManager {
   }
 
   public async getAllMovieIds(): Promise<string[]> {
-    const entries = await fs.promises.readdir(this.dir, { withFileTypes: true });
+    const moviesRootDir = this.getMoviesRootDir();
+    const entries = await fs.promises.readdir(moviesRootDir, { withFileTypes: true });
     const directories = filter(entries, (e) => e.isDirectory());
     const movieIds = map(directories, (d) => d.name);
     return movieIds;
@@ -74,13 +75,20 @@ export class FileManager {
     await this.writeJsonFile(filePath, { action, ...data, userId, timestamp });
   }
 
+  private getMoviesRootDir() {
+    const filePath = path.resolve(this.dir, 'movies');
+    return filePath;
+  }
+
   private getIndexFilePath() {
-    const filePath = path.resolve(this.dir, 'index.json');
+    const movieDir = this.getMoviesRootDir();
+    const filePath = path.resolve(movieDir, 'index.json');
     return filePath;
   }
 
   private getMovieDir(imdbId: string) {
-    const movieDir = path.resolve(this.dir, 'movies', imdbId);
+    const movieRootDir = this.getMoviesRootDir();
+    const movieDir = path.resolve(movieRootDir, imdbId);
     return movieDir;
   }
 
