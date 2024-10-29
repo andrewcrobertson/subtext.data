@@ -9,8 +9,8 @@ import type * as T from './FileManager.types';
 export class FileManager {
   public constructor(private readonly dir: string) {}
 
-  public async writeIndex(data: T.WriteIndexDataInputMovie[], userId: string, timestamp: string) {
-    const filePath = this.getIndexFilePath();
+  public async writeIndex(data: T.WriteIndexDataInputMovie, userId: string, timestamp: string) {
+    const filePath = this.getIndexFilePath(data.pageNumber);
     await this.writeJsonFile(filePath, data);
     await this.writeLog('WRITE_INDEX', {}, userId, timestamp);
     return filePath;
@@ -52,6 +52,11 @@ export class FileManager {
     return movieIds;
   }
 
+  public async deleteAllIndexes(): Promise<void> {
+    const indexDir = this.getIndexDir();
+    await fs.promises.rm(indexDir, { recursive: true, force: true });
+  }
+
   public async getMovieData(imdbId: string): Promise<T.GetMovieDataResponse | null> {
     const filePath = this.getMovieDataFilePath(imdbId);
     const data = fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath, 'utf-8')) : null;
@@ -80,9 +85,15 @@ export class FileManager {
     return filePath;
   }
 
-  private getIndexFilePath() {
-    const movieDir = this.getMoviesRootDir();
-    const filePath = path.resolve(movieDir, 'index.json');
+  private getIndexDir() {
+    const filePath = path.resolve(this.dir, 'indexes');
+    return filePath;
+  }
+
+  private getIndexFilePath(pageNumber: number) {
+    const movieDir = this.getIndexDir();
+    const fileName = pageNumber === 0 ? 'index.json' : `index.${pageNumber}.json`
+    const filePath = path.resolve(movieDir, fileName);
     return filePath;
   }
 

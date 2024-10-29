@@ -52,11 +52,15 @@ export interface ToMovieResponse {
   subtitles: ToMovieResponseSubtitle[];
 }
 
-export interface MovieIndex {
+export interface MovieIndexRaw {
   imdbId: string;
   title: string;
-  posterFileName: string | null;
   releaseDate: string | null;
   releaseYear: number | null;
-  subtitleCount: number;
+}
+
+export interface MovieIndex {
+  pageNumber: number
+  pageCount: number
+  imdbIds: string[];
 }

@@ -84,7 +84,7 @@ export class Handler {
     const timestamp = new Date().toISOString();
 
     const movieIds = await this.fileManager.getAllMovieIds();
-    const moviesRaw: T.MovieIndex[] = [];
+    const moviesRaw: T.MovieIndexRaw[] = [];
     for (let i = 0; i < movieIds.length; i++) {
       const movieId = movieIds[i];
       const movie = await this.fileManager.getMovieData(movieId);
@@ -92,18 +92,27 @@ export class Handler {
         moviesRaw.push({
           imdbId: movie.imdbId,
           title: movie.title,
-          posterFileName: movie.posterFileName,
           releaseDate: movie.releaseDate,
           releaseYear: movie.releaseYear,
-          subtitleCount: movie.subtitleIds.length,
         });
       }
     }
 
     const moviesSorted = orderBy(moviesRaw, ['releaseDate', 'releaseYear', 'title'], ['desc', 'desc', 'asc']);
-    const movies = map(moviesSorted, (m) => ({ imdbId: m.imdbId, title: m.title, posterFileName: m.posterFileName, subtitleCount: m.subtitleCount }));
-    const indexFilePath = await this.fileManager.writeIndex(movies, userId, timestamp);
-    this.logger.infoSavedIndexFile(indexFilePath);
+    const imdbIds = map(moviesSorted, m => m.imdbId)
+    const itemsPerPage = 100
+    const pageCount = Math.ceil(moviesSorted.length / itemsPerPage);
+  
+    await this.fileManager.deleteAllIndexes()
+    for (let i = 0; i < pageCount; i++) {
+      const start = i * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pageIds = imdbIds.slice(start, end);
+      const index: T.MovieIndex = ({ pageNumber: i + 1, pageCount: pageCount, imdbIds: pageIds });
+
+      const indexFilePath = await this.fileManager.writeIndex(index, userId, timestamp);
+      this.logger.infoSavedIndexFile(indexFilePath);
+    }
 
     this.logger.infoBlank();
   }

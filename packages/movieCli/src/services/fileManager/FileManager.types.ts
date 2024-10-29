@@ -41,8 +41,7 @@ export interface GetMovieDataResponse {
 }
 
 export interface WriteIndexDataInputMovie {
-  imdbId: string;
-  title: string;
-  posterFileName: string | null;
-  subtitleCount: number;
+  pageNumber: number
+  pageCount: number
+  imdbIds: string[];
 }
