@@ -1,4 +1,3 @@
-import crypto from 'crypto';
 import fs from 'fs';
 import { filter, map } from 'lodash';
 import path from 'path';
@@ -109,11 +108,11 @@ export class FileManager {
   }
 
   private getLogFilePath(timestamp: string) {
-    const timestampFormatted = timestamp.replace(/-/g, '').replace(/[:.]/g, '').replace('T', '').replace('Z', '');
-    const randomHex = crypto.randomBytes(4).toString('hex');
-    const movieLogDir = this.getLogDir();
-    const filePath = path.resolve(movieLogDir, `${timestampFormatted}.${randomHex}.json`);
-    return filePath;
+    // const timestampFormatted = timestamp.replace(/-/g, '').replace(/[:.]/g, '').replace('T', '').replace('Z', '');
+    // const randomHex = crypto.randomBytes(4).toString('hex');
+    // const movieLogDir = this.getLogDir();
+    // const filePath = path.resolve(movieLogDir, `${timestampFormatted}.${randomHex}.json`);
+    // return filePath;
   }
 
   private getMovieDataFilePath(imdbId: string) {
