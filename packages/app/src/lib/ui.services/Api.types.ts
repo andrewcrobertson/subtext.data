@@ -1,36 +1,37 @@
-export interface ApiGetIndexOutput {
-  imdbId: string;
-  title: string;
-  posterFileName: string | null;
-  subtitleCount: number;
+export interface GetIndexOutput {
+  pageNumber: number;
+  pageCount: number;
+  imdbIds: string[];
 }
 
-export interface ApiGetMovieDataOutput {
+export interface GetMovieOutput {
   imdbId: string;
   title: string;
-  releaseDate: string;
-  releaseYear: number;
-  posterFileName: string;
-  rated: string;
+  releaseDate: string | null;
+  releaseYear: string | null;
+  posterFileName: string | null;
+  rated: string | null;
   genres: string[];
   directors: string[];
   writers: string[];
   actors: string[];
-  runTime: number;
-  plot: string;
+  runTime: number | null;
+  plot: string | null;
   subtitleIds: string[];
+  isAvailable: boolean;
 }
 
-export interface GetIndexOutput extends Omit<ApiGetIndexOutput, 'posterFileName'> {
-  posterUrl: string;
-}
-
-export interface GetMovieDataOutput extends Omit<ApiGetMovieDataOutput, 'posterFileName' | 'subtitleIds'> {
-  posterUrl: string;
-  subtitleCount: number;
+export interface GetSubtitleOutput {
+  subtitleId: string;
+  source: string;
+  author: string;
+  zipFileName: string | null;
+  subtitleFileName: string;
+  subtextFileName: string;
 }
 
 export interface Api {
-  getIndex: () => Promise<GetIndexOutput[]>;
-  getMovieData: (imdbId: string) => Promise<GetMovieDataOutput | null>;
+  getIndex: (pageNumber: string) => Promise<GetIndexOutput | null>;
+  getMovieData: (imdbId: string) => Promise<GetMovieOutput | null>;
+  getSubtitle: (imdbId: string, subtitleId: string) => Promise<GetSubtitleOutput | null>;
 }

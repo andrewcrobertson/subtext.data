@@ -13,7 +13,7 @@ export class ApiMemoryCache implements T.Api {
     return this.index;
   }
 
-  public async getMovieData(imdbId: string): Promise<T.GetMovieDataOutput | null> {
+  public async getMovieData(imdbId: string): Promise<T.GetMovieOutput | null> {
     return await this.instance.getMovieData(imdbId);
   }
 }

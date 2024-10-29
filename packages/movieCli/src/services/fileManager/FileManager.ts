@@ -32,14 +32,14 @@ export class FileManager {
   public async writeSubtitleData(imdbId: string, data: T.WriteSubtitleDataInputSubtitle, userId: string, timestamp: string) {
     const filePath = this.getSubtitleDataFilePath(imdbId, data.subtitleId);
     await this.writeJsonFile(filePath, data);
-    await this.writeLog('WRITE_SUBTITLE_DATA', { imdbId, subtitleId: data.subtitleId }, userId, timestamp);
+    await this.writeLog('WRITE_Subtitle_DATA', { imdbId, subtitleId: data.subtitleId }, userId, timestamp);
     return filePath;
   }
 
   public async writeSubtitleText(imdbId: string, data: T.WriteSubtitleDataInputSubtitle, text: string, userId: string, timestamp: string) {
     const filePath = this.getSubtitleTextFilePath(imdbId, data.subtitleId, data.subtextFileName);
     await this.writeTextFile(filePath, text);
-    await this.writeLog('WRITE_SUBTITLE_TEXT', { imdbId, subtitleId: data.subtitleId }, userId, timestamp);
+    await this.writeLog('WRITE_Subtitle_TEXT', { imdbId, subtitleId: data.subtitleId }, userId, timestamp);
     return filePath;
   }
 
@@ -91,7 +91,7 @@ export class FileManager {
 
   private getIndexFilePath(pageNumber: number) {
     const movieDir = this.getIndexDir();
-    const fileName = pageNumber === 0 ? 'index.json' : `index.${pageNumber}.json`
+    const fileName = pageNumber === 0 ? 'index.json' : `index.${pageNumber}.json`;
     const filePath = path.resolve(movieDir, fileName);
     return filePath;
   }

@@ -12,7 +12,7 @@ export const config: Config = {
     zipUrlBase: 'https://dl.subdl.com',
   },
   openSubtitles: {
-    token: environment.OPEN_SUBTITLES_TOKEN,
+    token: environment.OPEN_SubtitleS_TOKEN,
     apiUrlBase: 'https://api.opensubtitles.com/api/v1',
   },
 };
