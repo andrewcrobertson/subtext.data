@@ -34,7 +34,7 @@
     <div class="flex space-x-4">
       <div class="flex items-center">
         <ChatBubbleLeftRightIcon class="text-black w-6 h-6 mr-2" />
-        <p class="font-semibold text-lg text-black hidden sm:block">SubText</p>
+        <p class="font-semibold text-lg text-black hidden sm:block">subtext</p>
       </div>
       <p class="font-semibold text-xl text-white">Edit</p>
     </div>
@@ -48,7 +48,7 @@
   <div transition:fade class={twMerge('flex justify-between items-center p-4 z-10 bg-black bg-opacity-80 border-b-2 border-yellow-500 h-14', _class)}>
     <div class="flex items-center">
       <ChatBubbleLeftRightIcon class="text-yellow-500 w-6 h-6 mr-2" />
-      <p class="font-semibold text-lg text-yellow-500 sm:block">SubText</p>
+      <p class="font-semibold text-lg text-yellow-500 sm:block">subtext</p>
     </div>
     <div class="flex space-x-4">
       {#if allowEdit}

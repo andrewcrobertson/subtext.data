@@ -21,7 +21,7 @@
 <div class={twMerge('flex justify-between items-center p-2 z-10 bg-black bg-opacity-70 border-b-2 border-yellow-500', _class)}>
   <div class="flex items-center">
     <ChatBubbleLeftRightIcon class="text-yellow-500 size-8 mr-2" />
-    <p class="font-bold text-xl text-yellow-500">SubText</p>
+    <p class="font-bold text-xl text-yellow-500">subtext</p>
   </div>
   {#if canInstall}
     <button class="btn btn-square text-white transition transform hover:scale-150" on:click={handleInstallClick}>

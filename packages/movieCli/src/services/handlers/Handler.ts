@@ -46,12 +46,12 @@ export class Handler {
         }
 
         for (let i = 0; i < subtitles.length; i++) {
-          const { subTextValue, ...data } = subtitles[i];
+          const { subtextValue, ...data } = subtitles[i];
 
           const subtitleDataFile = await this.fileManager.writeSubtitleData(imdbId, data, userId, timestamp);
           this.logger.infoSavedMetaFile(subtitleDataFile);
 
-          const subtitleFile = await this.fileManager.writeSubtitleText(imdbId, data, subTextValue, userId, timestamp);
+          const subtitleFile = await this.fileManager.writeSubtitleText(imdbId, data, subtextValue, userId, timestamp);
           this.logger.infoSavedSubtitleFile(subtitleFile);
         }
       } else {
@@ -135,11 +135,11 @@ export class Handler {
       const { subtitleFileText, ...subtitleRaw } = subtitlesRaw[i];
       const ext = path.parse(path.basename(subtitleRaw.subtitleFileName)).ext;
       if (ext === '.srt') {
-        const subTextValue = parseSrt3(subtitleFileText);
-        const subtitleId = this.generateHashFromText(subTextValue);
-        const subTextFileName = `subtext.txt`;
+        const subtextValue = parseSrt3(subtitleFileText);
+        const subtitleId = this.generateHashFromText(subtextValue);
+        const subtextFileName = `subtext.txt`;
         output.movieData.subtitleIds.push(subtitleId);
-        output.subtitles.push({ subtitleId, ...subtitleRaw, subTextFileName, subTextValue });
+        output.subtitles.push({ subtitleId, ...subtitleRaw, subtextFileName, subtextValue });
       }
     }
 

@@ -38,7 +38,7 @@ export class FileManager {
   }
 
   public async writeSubtitleText(imdbId: string, data: T.WriteSubtitleDataInputSubtitle, text: string, userId: string, timestamp: string) {
-    const filePath = this.getSubtitleTextFilePath(imdbId, data.subtitleId, data.subTextFileName);
+    const filePath = this.getSubtitleTextFilePath(imdbId, data.subtitleId, data.subtextFileName);
     await this.writeTextFile(filePath, text);
     await this.writeLog('WRITE_SUBTITLE_TEXT', { imdbId, subtitleId: data.subtitleId }, userId, timestamp);
     return filePath;

@@ -27,8 +27,8 @@ export interface ToMovieResponseSubtitle {
   author: string | null;
   zipFileName: string | null;
   subtitleFileName: string;
-  subTextFileName: string;
-  subTextValue: string;
+  subtextFileName: string;
+  subtextValue: string;
 }
 
 export interface ToMovieResponseIndex {

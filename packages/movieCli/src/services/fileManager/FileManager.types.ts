@@ -20,7 +20,7 @@ export interface WriteSubtitleDataInputSubtitle {
   author: string | null;
   zipFileName: string | null;
   subtitleFileName: string;
-  subTextFileName: string;
+  subtextFileName: string;
 }
 
 export interface GetMovieDataResponse {

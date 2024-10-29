@@ -1,8 +1,8 @@
 export interface Movie {
   imdbId: string;
   title: string;
-  releaseDate: string;
-  releaseYear: number;
+  releaseDate: string | null;
+  releaseYear: number | null;
   posterFileName: string;
   rated: string;
   genres: string[];
@@ -11,21 +11,14 @@ export interface Movie {
   actors: string[];
   runTime: number;
   plot: string;
-  subtitleIds: Subtitle[];
+  subtitles: Subtitle[];
 }
 
 export interface Subtitle {
-  imdbId: string;
-  title: string;
-  releaseDate: string;
-  releaseYear: number;
-  posterFileName: string;
-  rated: string;
-  genres: string[];
-  directors: string[];
-  writers: string[];
-  actors: string[];
-  runTime: number;
-  plot: string;
-  subtitleIds: string[];
+  subtitleId: string;
+  source: string;
+  author: string;
+  zipFileName: string;,
+  subtitleFileName: string;
+  subtextFileName: string;
 }
