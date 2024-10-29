@@ -1,3 +1,5 @@
-import { Api } from '$lib/ui.services/Api';
+import { ApiFetch } from '$lib/ui.services/ApiFetch';
+import { ApiMemoryCache } from '$lib/ui.services/ApiMemoryCache';
 
-export const api = new Api('https://raw.githubusercontent.com/andrewcrobertson/subtext.data/main/__data__');
+export const apiFetch = new ApiFetch('https://raw.githubusercontent.com/andrewcrobertson/subtext.data/main/__data__/movies');
+export const api = new ApiMemoryCache(apiFetch);

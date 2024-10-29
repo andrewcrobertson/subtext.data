@@ -1,6 +1,6 @@
 import type { MyListMovieIdManager } from '$lib/ui.services/MyListMovieIdManager';
 import { includes } from 'lodash-es';
-import type { Api } from './Api';
+import type { Api } from './Api.types';
 import type * as T from './SearchService.types';
 
 export class SearchService {

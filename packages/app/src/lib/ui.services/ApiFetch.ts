@@ -1,7 +1,7 @@
 import { find, map } from 'lodash-es';
 import type * as T from './Api.types';
 
-export class Api {
+export class ApiFetch implements T.Api {
   public constructor(private readonly baseUrl: string) {}
 
   public async getIndex(): Promise<T.GetIndexOutput[]> {

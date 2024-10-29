@@ -1,6 +1,5 @@
 import type { MyListMovieIdManager } from '$lib/ui.services/MyListMovieIdManager';
-import { includes } from 'lodash-es';
-import type { Api } from './Api';
+import type { Api } from './Api.types';
 import type * as T from './HomeService.types';
 
 export class HomeService {
@@ -10,15 +9,13 @@ export class HomeService {
   ) {}
 
   public async load(): Promise<T.LoadOutput> {
-    const index = await this.api.getIndex();
     const myListMovieIds = await this.myListMovieIdManager.get();
     const myListMovies: T.LoadOutputRecentMovie[] = [];
 
-    for (let i = 0; i < index.length; i++) {
-      const imdbId = index[i].imdbId;
+    for (let i = 0; i < myListMovieIds.length; i++) {
+      const imdbId = myListMovieIds[i];
       const movie = await this.api.getMovieData(imdbId);
-      const isOnMyList = includes(myListMovieIds, movie!.imdbId);
-      if (isOnMyList) myListMovies.push({ ...movie!, isOnMyList });
+      myListMovies.push({ ...movie!, isOnMyList: true });
     }
 
     return { myListMovies };
