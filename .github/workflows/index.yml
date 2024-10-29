@@ -44,7 +44,47 @@ jobs:
           OMDB_TOKEN: ${{ secrets.OMDB_TOKEN }}
           OPEN_SUBTITLES_TOKEN: ${{ secrets.OPEN_SUBTITLES_TOKEN }}
           SUBDL_TOKEN: ${{ secrets.SUBDL_TOKEN }}
-        run: pnpm run index
+        run: |
+          pnpm run load -i tt0029583
+          pnpm run load -i tt0062622
+          pnpm run load -i tt0066279
+          pnpm run load -i tt0073195
+          pnpm run load -i tt0083866
+          pnpm run load -i tt0109506
+          pnpm run load -i tt0110912
+          pnpm run load -i tt0120053
+          pnpm run load -i tt0133240
+          pnpm run load -i tt0317219
+          pnpm run load -i tt0816692
+          pnpm run load -i tt1217213
+          pnpm run load -i tt1234721
+          pnpm run load -i tt1375666
+          pnpm run load -i tt1462764
+          pnpm run load -i tt1489887
+          pnpm run load -i tt1853728
+          pnpm run load -i tt1877830
+          pnpm run load -i tt2049403
+          pnpm run load -i tt2321549
+          pnpm run load -i tt3159812
+          pnpm run load -i tt3829266
+          pnpm run load -i tt3861390
+          pnpm run load -i tt3908142
+          pnpm run load -i tt4429160
+          pnpm run load -i tt5112584
+          pnpm run load -i tt6263850
+          pnpm run load -i tt8864596
+          pnpm run load -i tt11315808
+          pnpm run load -i tt14209916
+          pnpm run load -i tt16366836
+          pnpm run load -i tt17526714
+          pnpm run load -i tt17527468
+          pnpm run load -i tt18412256
+          pnpm run load -i tt23770030
+          pnpm run load -i tt27911000
+          pnpm run load -i tt29268110
+          pnpm run load -i tt29424284
+          pnpm run load -i tt29623480
+          pnpm run index
 
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v5

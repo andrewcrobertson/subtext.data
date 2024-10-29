@@ -80,7 +80,7 @@ export class FileManager {
   }
 
   private getMovieDir(imdbId: string) {
-    const movieDir = path.resolve(this.dir, imdbId);
+    const movieDir = path.resolve(this.dir, 'movies', imdbId);
     return movieDir;
   }
 
