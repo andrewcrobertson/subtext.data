@@ -59,8 +59,8 @@ export interface MovieIndexRaw {
   releaseYear: number | null;
 }
 
-export interface MovieIndex {
-  pageNumber: number
-  pageCount: number
+export interface QueryIndex {
+  pageNumber: number;
+  pageCount: number;
   imdbIds: string[];
 }

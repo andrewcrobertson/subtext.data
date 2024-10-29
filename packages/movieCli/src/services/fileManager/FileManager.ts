@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import fs from 'fs';
 import { filter, map } from 'lodash';
 import path from 'path';
@@ -8,8 +9,8 @@ import type * as T from './FileManager.types';
 export class FileManager {
   public constructor(private readonly dir: string) {}
 
-  public async writeIndex(data: T.WriteIndexDataInputMovie, userId: string, timestamp: string) {
-    const filePath = this.getIndexFilePath(data.pageNumber);
+  public async writeQueryIndex(data: T.WriteIndexDataInputMovie, userId: string, timestamp: string) {
+    const filePath = this.getQueryIndexFilePath(data.pageNumber);
     await this.writeJsonFile(filePath, data);
     await this.writeLog('WRITE_INDEX', {}, userId, timestamp);
     return filePath;
@@ -51,8 +52,8 @@ export class FileManager {
     return movieIds;
   }
 
-  public async deleteAllIndexes(): Promise<void> {
-    const indexDir = this.getIndexDir();
+  public async deleteAllQueries(): Promise<void> {
+    const indexDir = this.getQueryDir();
     await fs.promises.rm(indexDir, { recursive: true, force: true });
   }
 
@@ -75,8 +76,8 @@ export class FileManager {
   }
 
   private async writeLog(action: string, data: any, userId: string, timestamp: string) {
-    const filePath = this.getLogFilePath(timestamp);
-    await this.writeJsonFile(filePath, { action, ...data, userId, timestamp });
+    // const filePath = this.getLogFilePath(timestamp);
+    // await this.writeJsonFile(filePath, { action, ...data, userId, timestamp });
   }
 
   private getMoviesRootDir() {
@@ -84,15 +85,14 @@ export class FileManager {
     return filePath;
   }
 
-  private getIndexDir() {
-    const filePath = path.resolve(this.dir, 'indexes');
+  private getQueryDir() {
+    const filePath = path.resolve(this.dir, 'queries');
     return filePath;
   }
 
-  private getIndexFilePath(pageNumber: number) {
-    const movieDir = this.getIndexDir();
-    const fileName = pageNumber === 0 ? 'index.json' : `index.${pageNumber}.json`;
-    const filePath = path.resolve(movieDir, fileName);
+  private getQueryIndexFilePath(pageNumber: number) {
+    const queryDir = this.getQueryDir();
+    const filePath = path.resolve(queryDir, 'release-date-asc', pageNumber.toString(), 'index.json');
     return filePath;
   }
 
@@ -108,11 +108,11 @@ export class FileManager {
   }
 
   private getLogFilePath(timestamp: string) {
-    // const timestampFormatted = timestamp.replace(/-/g, '').replace(/[:.]/g, '').replace('T', '').replace('Z', '');
-    // const randomHex = crypto.randomBytes(4).toString('hex');
-    // const movieLogDir = this.getLogDir();
-    // const filePath = path.resolve(movieLogDir, `${timestampFormatted}.${randomHex}.json`);
-    // return filePath;
+    const timestampFormatted = timestamp.replace(/-/g, '').replace(/[:.]/g, '').replace('T', '').replace('Z', '');
+    const randomHex = crypto.randomBytes(4).toString('hex');
+    const movieLogDir = this.getLogDir();
+    const filePath = path.resolve(movieLogDir, `${timestampFormatted}.${randomHex}.json`);
+    return filePath;
   }
 
   private getMovieDataFilePath(imdbId: string) {
