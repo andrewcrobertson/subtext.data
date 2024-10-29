@@ -1,36 +1,75 @@
-export interface ApiGetIndexOutput {
+export interface GetRecentMoviesOutput {
   imdbId: string;
   title: string;
-  posterFileName: string | null;
-  subtitleCount: number;
-}
-
-export interface ApiGetMovieDataOutput {
-  imdbId: string;
-  title: string;
-  releaseDate: string;
-  releaseYear: number;
-  posterFileName: string;
-  rated: string;
+  releaseDate: string | null;
+  releaseYear: string | null;
+  posterUrl: string | null;
+  rated: string | null;
   genres: string[];
   directors: string[];
   writers: string[];
   actors: string[];
-  runTime: number;
-  plot: string;
-  subtitleIds: string[];
-}
-
-export interface GetIndexOutput extends Omit<ApiGetIndexOutput, 'posterFileName'> {
-  posterUrl: string;
-}
-
-export interface GetMovieDataOutput extends Omit<ApiGetMovieDataOutput, 'posterFileName' | 'subtitleIds'> {
-  posterUrl: string;
+  runTime: number | null;
+  plot: string | null;
   subtitleCount: number;
+  isOnMyList: boolean;
 }
 
-export interface Api {
-  getIndex: () => Promise<GetIndexOutput[]>;
-  getMovieData: (imdbId: string) => Promise<GetMovieDataOutput | null>;
+export interface SearchMoviesOutput {
+  imdbId: string;
+  title: string;
+  releaseDate: string | null;
+  releaseYear: string | null;
+  posterUrl: string | null;
+  rated: string | null;
+  genres: string[];
+  directors: string[];
+  writers: string[];
+  actors: string[];
+  runTime: number | null;
+  plot: string | null;
+  subtitleCount: number;
+  isOnMyList: boolean;
+}
+
+export interface GetMyListMoviesOutput {
+  imdbId: string;
+  title: string;
+  releaseDate: string | null;
+  releaseYear: string | null;
+  posterUrl: string | null;
+  rated: string | null;
+  genres: string[];
+  directors: string[];
+  writers: string[];
+  actors: string[];
+  runTime: number | null;
+  plot: string | null;
+  subtitleCount: number;
+  isOnMyList: boolean;
+}
+
+export interface GetMovieOutput {
+  imdbId: string;
+  title: string;
+  releaseDate: string | null;
+  releaseYear: string | null;
+  posterUrl: string | null;
+  rated: string | null;
+  genres: string[];
+  directors: string[];
+  writers: string[];
+  actors: string[];
+  runTime: number | null;
+  plot: string | null;
+  subtitleCount: number;
+  isOnMyList: boolean;
+}
+
+export interface Gateway {
+  getRecentMovies: () => Promise<GetRecentMoviesOutput[]>;
+  searchMovies: () => Promise<SearchMoviesOutput[]>;
+  getMovie: (imdbId: string) => Promise<GetMovieOutput | null>;
+  getMyListMovies: (userId: string) => Promise<GetMyListMoviesOutput[]>;
+  removeFromMyList: (userId: string, imdbId: string) => Promise<void>;
 }

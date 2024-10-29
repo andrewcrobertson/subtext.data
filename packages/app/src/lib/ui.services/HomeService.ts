@@ -1,27 +1,21 @@
-import type { MyListMovieIdManager } from '$lib/ui.services/MyListMovieIdManager';
-import type { Api } from './Api.types';
+import type { Gateway } from './Gateway.types';
 import type * as T from './HomeService.types';
+import type { UserIdService } from './UserIdService';
 
 export class HomeService {
   public constructor(
-    private readonly api: Api,
-    private readonly myListMovieIdManager: MyListMovieIdManager
+    private readonly userIdService: UserIdService,
+    private readonly gateway: Gateway
   ) {}
 
   public async load(): Promise<T.LoadOutput> {
-    const myListMovieIds = await this.myListMovieIdManager.get();
-    const myListMovies: T.LoadOutputRecentMovie[] = [];
-
-    for (let i = 0; i < myListMovieIds.length; i++) {
-      const imdbId = myListMovieIds[i];
-      const movie = await this.api.getMovieData(imdbId);
-      myListMovies.push({ ...movie!, isOnMyList: true });
-    }
-
+    const userId = await this.userIdService.getMyId();
+    const myListMovies: T.LoadOutputRecentMovie[] = await this.gateway.getMyListMovies(userId);
     return { myListMovies };
   }
 
   public async removeFromMyList(imdbId: string): Promise<void> {
-    await this.myListMovieIdManager.remove(imdbId);
+    const userId = await this.userIdService.getMyId();
+    await this.gateway.removeFromMyList(userId, imdbId);
   }
 }

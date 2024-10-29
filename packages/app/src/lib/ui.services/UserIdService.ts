@@ -2,7 +2,7 @@ import type { BlobStore } from '$lib/isomorphic.services/BlobStore.types';
 import { isNil } from 'lodash-es';
 import { v1 as guid } from 'uuid';
 
-export class MyIdService {
+export class UserIdService {
   constructor(private readonly blobStore: BlobStore<string>) {}
 
   public async getMyId(): Promise<string> {

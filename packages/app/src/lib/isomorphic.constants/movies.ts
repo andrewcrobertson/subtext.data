@@ -1,2 +1,2 @@
 export const showNRecentMovies = 15;
-export const cacheNRecentMovies = 100;
+export const maxNRecentMovies = 100;

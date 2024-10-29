@@ -1,27 +1,26 @@
 import type { MyListMovieIdManager } from '$lib/ui.services/MyListMovieIdManager';
 import { includes } from 'lodash-es';
-import type { Api } from './Api.types';
+import type { Gateway } from './Gateway.types';
 import type * as T from './SearchService.types';
 
 export class SearchService {
   public constructor(
     private readonly showNRecentMovies: number,
-    private readonly api: Api,
+    private readonly gateway: Gateway,
     private readonly myListMovieIdManager: MyListMovieIdManager
   ) {}
 
   public async load(): Promise<T.LoadOutput> {
-    const index = await this.api.getIndex();
+    const recentMoviesRaw = await this.gateway.getRecentMovies();
     const myListMovieIds = await this.myListMovieIdManager.get();
     const recentMovies: T.LoadOutputRecentMovie[] = [];
 
     let gotNRecentMovies = false;
-    for (let i = 0; i < index.length; i++) {
-      const imdbId = index[i].imdbId;
-      const movie = await this.api.getMovieData(imdbId);
+    for (let i = 0; i < recentMoviesRaw.length; i++) {
+      const recentMovie = recentMoviesRaw[i];
+      const isOnMyList = includes(myListMovieIds, recentMovie.imdbId);
       gotNRecentMovies = recentMovies.length > this.showNRecentMovies;
-      const isOnMyList = includes(myListMovieIds, movie!.imdbId);
-      if (!gotNRecentMovies) recentMovies.push({ ...movie!, isOnMyList });
+      if (!gotNRecentMovies) recentMovies.push({ ...recentMovie, isOnMyList });
       if (gotNRecentMovies) break;
     }
 
@@ -31,15 +30,15 @@ export class SearchService {
   public async search(query: string): Promise<T.SearchOutput[]> {
     if (query === '') return [];
 
-    const index = await this.api.getIndex();
+    const recentMovies = await this.gateway.getRecentMovies();
     const myListMovieIds = await this.myListMovieIdManager.get();
     const matchingMovies: T.SearchOutput[] = [];
 
-    for (let i = 0; i < index.length; i++) {
-      const { imdbId, title } = index[i];
+    for (let i = 0; i < recentMovies.length; i++) {
+      const { imdbId, title } = recentMovies[i];
       const match = title.toLowerCase().includes(query.toLowerCase());
       if (match) {
-        const movie = await this.api.getMovieData(imdbId);
+        const movie = await this.gateway.getMovie(imdbId);
         const isOnMyList = includes(myListMovieIds, movie!.imdbId);
         matchingMovies.push({ ...movie!, isOnMyList });
       }

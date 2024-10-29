@@ -31,7 +31,7 @@ export interface GetSubtitleOutput {
 }
 
 export interface Api {
-  getIndex: (pageNumber: string) => Promise<GetIndexOutput | null>;
-  getMovieData: (imdbId: string) => Promise<GetMovieOutput | null>;
+  getIndex: (pageNumber: number) => Promise<GetIndexOutput | null>;
+  getMovie: (imdbId: string) => Promise<GetMovieOutput | null>;
   getSubtitle: (imdbId: string, subtitleId: string) => Promise<GetSubtitleOutput | null>;
 }

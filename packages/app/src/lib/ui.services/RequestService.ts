@@ -1,10 +1,10 @@
 import type { GitHubService } from './GitHubService';
-import type { MyIdService } from './MyIdService';
 import type * as T from './RequestService.types';
+import type { UserIdService } from './UserIdService';
 
 export class RequestService {
   public constructor(
-    private readonly myIdService: MyIdService,
+    private readonly myIdService: UserIdService,
     private readonly gitHubService: GitHubService
   ) {}
 
