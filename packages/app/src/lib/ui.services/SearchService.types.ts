@@ -22,13 +22,16 @@ export interface LoadOutput {
 export interface SearchOutput {
   imdbId: string;
   title: string;
-  releaseDate: string;
-  posterUrl: string;
-  rated: string;
+  releaseDate: string | null;
+  releaseYear: string | null;
+  posterUrl: string | null;
+  rated: string | null;
   genres: string[];
+  directors: string[];
+  writers: string[];
   actors: string[];
-  runTime: number;
-  plot: string;
+  runTime: number | null;
+  plot: string | null;
   subtitleCount: number;
   isOnMyList: boolean;
 }

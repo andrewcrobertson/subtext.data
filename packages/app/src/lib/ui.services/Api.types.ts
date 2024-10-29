@@ -1,4 +1,4 @@
-export interface GetIndexOutput {
+export interface GetReleaseDateAscOutput {
   pageNumber: number;
   pageCount: number;
   imdbIds: string[];
@@ -31,7 +31,7 @@ export interface GetSubtitleOutput {
 }
 
 export interface Api {
-  getIndex: (pageNumber: number) => Promise<GetIndexOutput | null>;
+  getReleaseDateAsc: (pageNumber: number) => Promise<GetReleaseDateAscOutput | null>;
   getMovie: (imdbId: string) => Promise<GetMovieOutput | null>;
   getSubtitle: (imdbId: string, subtitleId: string) => Promise<GetSubtitleOutput | null>;
 }

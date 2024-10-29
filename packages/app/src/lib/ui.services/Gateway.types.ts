@@ -68,8 +68,9 @@ export interface GetMovieOutput {
 
 export interface Gateway {
   getRecentMovies: () => Promise<GetRecentMoviesOutput[]>;
-  searchMovies: () => Promise<SearchMoviesOutput[]>;
+  searchMovies: (query: string) => Promise<SearchMoviesOutput[]>;
   getMovie: (imdbId: string) => Promise<GetMovieOutput | null>;
   getMyListMovies: (userId: string) => Promise<GetMyListMoviesOutput[]>;
+  addToMyList: (userId: string, imdbId: string) => Promise<void>;
   removeFromMyList: (userId: string, imdbId: string) => Promise<void>;
 }

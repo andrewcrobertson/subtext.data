@@ -3,11 +3,11 @@ import type * as T from './Api.types';
 export class ApiFetch implements T.Api {
   public constructor(private readonly baseUrl: string) {}
 
-  public async getIndex(pageNumber: number): Promise<T.GetIndexOutput | null> {
+  public async getReleaseDateAsc(pageNumber: number): Promise<T.GetReleaseDateAscOutput | null> {
     const url = `${this.baseUrl}/movies/index.${pageNumber}.json`;
     const res = await fetch(url);
     if (res.status === 404) return null;
-    const data: T.GetIndexOutput = await res.json();
+    const data: T.GetReleaseDateAscOutput = await res.json();
     return data;
   }
 

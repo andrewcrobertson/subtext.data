@@ -1,57 +1,30 @@
-import type { MyListMovieIdManager } from '$lib/ui.services/MyListMovieIdManager';
-import { includes } from 'lodash-es';
 import type { Gateway } from './Gateway.types';
 import type * as T from './SearchService.types';
+import type { UserIdService } from './UserIdService';
 
 export class SearchService {
   public constructor(
-    private readonly showNRecentMovies: number,
-    private readonly gateway: Gateway,
-    private readonly myListMovieIdManager: MyListMovieIdManager
+    private readonly userIdService: UserIdService,
+    private readonly gateway: Gateway
   ) {}
 
   public async load(): Promise<T.LoadOutput> {
-    const recentMoviesRaw = await this.gateway.getRecentMovies();
-    const myListMovieIds = await this.myListMovieIdManager.get();
-    const recentMovies: T.LoadOutputRecentMovie[] = [];
-
-    let gotNRecentMovies = false;
-    for (let i = 0; i < recentMoviesRaw.length; i++) {
-      const recentMovie = recentMoviesRaw[i];
-      const isOnMyList = includes(myListMovieIds, recentMovie.imdbId);
-      gotNRecentMovies = recentMovies.length > this.showNRecentMovies;
-      if (!gotNRecentMovies) recentMovies.push({ ...recentMovie, isOnMyList });
-      if (gotNRecentMovies) break;
-    }
-
+    const recentMovies = await this.gateway.getRecentMovies();
     return { recentMovies };
   }
 
   public async search(query: string): Promise<T.SearchOutput[]> {
     if (query === '') return [];
-
-    const recentMovies = await this.gateway.getRecentMovies();
-    const myListMovieIds = await this.myListMovieIdManager.get();
-    const matchingMovies: T.SearchOutput[] = [];
-
-    for (let i = 0; i < recentMovies.length; i++) {
-      const { imdbId, title } = recentMovies[i];
-      const match = title.toLowerCase().includes(query.toLowerCase());
-      if (match) {
-        const movie = await this.gateway.getMovie(imdbId);
-        const isOnMyList = includes(myListMovieIds, movie!.imdbId);
-        matchingMovies.push({ ...movie!, isOnMyList });
-      }
-    }
-
+    const matchingMovies: T.SearchOutput[] = await this.gateway.searchMovies(query);
     return matchingMovies;
   }
 
   public async updateIsOnMyList(imdbId: string, isOnMyList: boolean): Promise<void> {
+    const userId = await this.userIdService.getMyId();
     if (isOnMyList) {
-      await this.myListMovieIdManager.add(imdbId);
+      await this.gateway.addToMyList(userId, imdbId);
     } else {
-      await this.myListMovieIdManager.remove(imdbId);
+      await this.gateway.removeFromMyList(userId, imdbId);
     }
   }
 }

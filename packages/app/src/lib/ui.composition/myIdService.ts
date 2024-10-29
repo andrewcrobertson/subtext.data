@@ -5,4 +5,4 @@ import { UserIdService } from '$lib/ui.services/UserIdService';
 const ls = browser && localStorage !== undefined ? localStorage : (undefined as unknown as Storage);
 const blobStore = new StorageBlobStore<string>('my-id', ls);
 
-export const myIdService = new UserIdService(blobStore);
+export const userIdService = new UserIdService(blobStore);
