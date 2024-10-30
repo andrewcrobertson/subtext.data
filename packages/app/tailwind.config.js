@@ -9,7 +9,6 @@ export default {
     },
   },
   plugins: [
-    require('@tailwindcss/line-clamp'),
     function ({ addUtilities }) {
       addUtilities({
         '.scrollbar-hide': {

@@ -25,7 +25,7 @@
 <div class="flex w-full h-full bg-gray-800">
   <div class="w-1/2">
     {#if mode === T.Mode.Play}
-      <a href={`${base}/subtitles/${movie.imdbId}`} class="w-1/2">
+      <a href={`${base}/watch/${movie.imdbId}`} class="w-1/2">
         <img src={movie.posterUrl} alt={movie.title} class="w-full h-full object-cover" />
       </a>
     {:else}
@@ -59,7 +59,7 @@
       {#if mode === T.Mode.Play}
         <a
           class="flex items-center justify-center w-full h-10 space-x-1 bg-black text-white font-bold hover:bg-gray-900"
-          href={`${base}/subtitles/${movie.imdbId}`}
+          href={`${base}/watch/${movie.imdbId}`}
         >
           <span>Play</span>
           <PlayIcon class="text-lg text-white size-6" />

@@ -8,13 +8,20 @@
   import MagnifyingGlassIcon from '$lib/ui.icons/MagnifyingGlassIcon.svelte';
   import { findIndex } from 'lodash-es';
   import { onMount } from 'svelte';
+  import { fade } from 'svelte/transition';
 
   let searchQuery = '';
   let recentMovies: Movie[] = [];
   let displayMovies: Movie[] = [];
+  let doShowRequestAlert = true;
+  let requestAlertVisible = false;
   let loaded = false;
 
   const updateIsOnMyList = async (imdbId: string, isOnMyList: boolean) => {
+    if (isOnMyList) {
+      doShowRequestAlert = false;
+      requestAlertVisible = false;
+    }
     await searchService.updateIsOnMyList(imdbId, isOnMyList);
     const idx1 = findIndex(recentMovies, (m) => m.imdbId === imdbId);
     const idx2 = findIndex(displayMovies, (m) => m.imdbId === imdbId);
@@ -33,6 +40,7 @@
     recentMovies = loadRes.recentMovies;
     displayMovies = loadRes.recentMovies;
     loaded = true;
+    setTimeout(() => (requestAlertVisible = doShowRequestAlert), 5000);
   });
 </script>
 
@@ -64,17 +72,22 @@
     </Alert>
   {:else}
     {#if displayMovies.length > 0}
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-2 overflow-y-auto scrollbar-hide">
+      <div class:pb-24={requestAlertVisible} class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-2 overflow-y-auto scrollbar-hide">
         {#each displayMovies as movie}
           <MoviePanel mode={PMode.View} {movie} on:addclick={handleAddClick} on:removeclick={handleRemoveClick} />
         {/each}
       </div>
     {/if}
-    <Alert>
-      <p class="text-white text-xl">
-        Can't find the movie you want? Would you like to <a class="font-bold text-yellow-500 underline" href={`${base}/request?q=${searchQuery}`}>request it</a
-        >?
-      </p>
-    </Alert>
+    {#if requestAlertVisible}
+      <div transition:fade={{ duration: 1000 }} class="fixed bottom-0 left-0 right-0 bg-black">
+        <Alert>
+          <p class="text-white text-xl">
+            Can't find the movie you want? Would you like to <a class="font-bold text-yellow-500 underline" href={`${base}/request?q=${searchQuery}`}
+              >request it</a
+            >?
+          </p>
+        </Alert>
+      </div>
+    {/if}
   {/if}
 </TransitionWhenLoaded>
