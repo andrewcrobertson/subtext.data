@@ -3,7 +3,7 @@
   import { base } from '$app/paths';
   import ChatBubbleLeftRightIcon from '$lib/ui.icons/ChatBubbleLeftRightIcon.svelte';
   import MagnifyingGlassIcon from '$lib/ui.icons/MagnifyingGlassIcon.svelte';
-  import PlusIcon from '$lib/ui.icons/PlusIcon.svelte';
+  import FilmIcon from '$lib/ui.icons/FilmIcon.svelte';
   import { fade } from 'svelte/transition';
   import { twMerge } from 'tailwind-merge';
   import * as T from './types';
@@ -29,7 +29,7 @@
     </div>
     <div class="flex space-x-4">
       <a href={`${base}/request`} class="flex items-center">
-        <PlusIcon class="text-white size-5" />
+        <FilmIcon class="text-white size-5" />
         <p class="text-white text-sm hidden sm:inline">Request</p>
       </a>
       <a href={`${base}/search`} class="flex items-center">

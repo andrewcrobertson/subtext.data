@@ -1,5 +1,6 @@
 <script lang="ts">
   import { base } from '$app/paths';
+  import Alert from '$lib/ui.components/Alert';
   import Header, { Mode as HMode } from '$lib/ui.components/Header';
   import MoviePanel, { type MyListEventDetail, type Movie, Mode as PMode } from '$lib/ui.components/MoviePanel';
   import TransitionWhenLoaded from '$lib/ui.components/TransitionWhenLoaded';
@@ -43,12 +44,12 @@
       {/each}
     </div>
   {:else}
-    <div class="px-1 mx-auto max-w-screen-md">
-      <p class="text-white text-xl mt-4">
+    <Alert>
+      <p class="text-white text-xl">
         You currently don't have any movies in your list. Would you like to <a class="font-bold text-yellow-500 underline" href={`${base}/search`}
           >search for a movie</a
         >?
       </p>
-    </div>
+    </Alert>
   {/if}
 </TransitionWhenLoaded>

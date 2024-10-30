@@ -1,5 +1,6 @@
 <script lang="ts">
   import { base } from '$app/paths';
+  import Alert from '$lib/ui.components/Alert';
   import MoviePanel, { type MyListEventDetail, type Movie, Mode as PMode } from '$lib/ui.components/MoviePanel';
   import TransitionWhenLoaded from '$lib/ui.components/TransitionWhenLoaded';
   import { searchService } from '$lib/ui.composition/searchService';
@@ -55,12 +56,12 @@
 <div class="mt-16"></div>
 <TransitionWhenLoaded {loaded}>
   {#if recentMovies.length === 0}
-    <div class=" px-1 mx-auto max-w-screen-md">
-      <p class="text-white text-xl mt-4">
+    <Alert>
+      <p class="text-white text-xl">
         There are currently no movies in the database. Would you like to
         <a class="font-bold text-yellow-500 underline" href={`${base}/request?q=${searchQuery}`}>request a movie?</a>
       </p>
-    </div>
+    </Alert>
   {:else}
     {#if displayMovies.length > 0}
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-2 overflow-y-auto scrollbar-hide">
@@ -69,11 +70,11 @@
         {/each}
       </div>
     {/if}
-    <div class=" px-1 mx-auto max-w-screen-md">
-      <p class="text-white text-xl mt-4">
+    <Alert>
+      <p class="text-white text-xl">
         Can't find the movie you want? Would you like to <a class="font-bold text-yellow-500 underline" href={`${base}/request?q=${searchQuery}`}>request it</a
         >?
       </p>
-    </div>
+    </Alert>
   {/if}
 </TransitionWhenLoaded>

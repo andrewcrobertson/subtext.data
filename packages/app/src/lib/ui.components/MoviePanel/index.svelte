@@ -1,8 +1,8 @@
 <script lang="ts">
   import { base } from '$app/paths';
-  import MinusCircleIcon from '$lib/ui.icons/MinusCircleIcon.svelte';
+  import XMarkIcon from '$lib/ui.icons/XMarkIcon.svelte';
   import PlayIcon from '$lib/ui.icons/PlayIcon.svelte';
-  import PlusCircleIcon from '$lib/ui.icons/PlusCircleIcon.svelte';
+  import PlusIcon from '$lib/ui.icons/PlusIcon.svelte';
   import { formatRunTime, formatTextArray, formatRated, formatReleaseYear } from '$lib/ui.utils/format';
   import { createEventDispatcher } from 'svelte';
   import * as T from './types';
@@ -68,7 +68,7 @@
           on:click={() => onRemoveFromListClick(movie.imdbId)}
         >
           <span>Remove</span>
-          <MinusCircleIcon class="text-lg text-white size-6" />
+          <XMarkIcon class="text-lg text-white size-6" />
         </button>
       {:else}
         <button
@@ -76,7 +76,7 @@
           on:click={() => onAddToListClick(movie.imdbId)}
         >
           <span>Add</span>
-          <PlusCircleIcon class="text-lg text-white size-6" />
+          <PlusIcon class="text-lg text-white size-6" />
         </button>
       {/if}
     </div>

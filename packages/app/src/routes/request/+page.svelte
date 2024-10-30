@@ -47,6 +47,6 @@
       placeholder="Enter IMDb movie URL or ID"
       bind:value={$idOrUrl}
     />
-    <button type="submit" class="h-10 px-4 bg-yellow-500 text-black font-bold hover:bg-yellow-600">Submit</button>
+    <button type="submit" class="h-10 px-4 bg-yellow-500 text-white font-bold hover:bg-yellow-600">Submit</button>
   </form>
 </div>
