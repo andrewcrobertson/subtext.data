@@ -1,5 +1,6 @@
 import { RequestService } from '$lib/ui.services/RequestService';
+import { gateway } from './gateway';
 import { gitHubService } from './gitHubService';
 import { userIdService } from './myIdService';
 
-export const requestService = new RequestService(userIdService, gitHubService);
+export const requestService = new RequestService(userIdService, gitHubService, gateway);
