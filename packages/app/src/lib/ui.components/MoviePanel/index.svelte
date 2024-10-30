@@ -64,8 +64,8 @@
           class="flex items-center justify-center w-full h-10 space-x-1 bg-black text-white font-bold hover:bg-gray-900"
           href={`${base}/watch/${movie.imdbId}`}
         >
-          <span>Play</span>
           <PlayIcon class="text-lg text-white size-6" />
+          <span>Play</span>
         </a>
       {/if}
       {#if movie.isOnMyList}
@@ -73,16 +73,16 @@
           class="flex items-center justify-center w-full h-10 space-x-1 bg-yellow-500 text-white font-bold hover:bg-yellow-600"
           on:click={() => onRemoveFromListClick(movie.imdbId)}
         >
-          <span>Remove</span>
           <XMarkIcon class="text-lg text-white size-6" />
+          <span>Remove</span>
         </button>
       {:else}
         <button
           class="flex items-center justify-center w-full h-10 space-x-1 bg-black text-white font-bold hover:bg-gray-900"
           on:click={() => onAddToListClick(movie.imdbId)}
         >
-          <span>Add</span>
           <PlusIcon class="text-lg text-white size-6" />
+          <span>Add</span>
         </button>
       {/if}
     </div>

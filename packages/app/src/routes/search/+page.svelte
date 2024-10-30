@@ -84,7 +84,8 @@
       <div transition:fade={{ duration: 1000 }} class="fixed bottom-0 left-0 right-0 bg-black">
         <Alert>
           <p class="text-white text-xl">
-            If you can't find the movie you are searching for, you can <a class="font-bold text-yellow-500 underline" href={`${base}/request`}>request it</a>.
+            Can't find a movie? Feel free to <a class="font-bold text-yellow-500 underline" href={`${base}/request`}>make a request</a>, and we'll do our best
+            to add it.
           </p>
         </Alert>
       </div>
