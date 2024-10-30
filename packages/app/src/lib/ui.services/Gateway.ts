@@ -1,5 +1,5 @@
 import { convertSubtitles } from '$lib/isomorphic.utils/convertSubtitles';
-import { compact, filter, includes, lowerCase, map } from 'lodash-es';
+import { compact, filter, includes, lowerCase, map, orderBy, uniq } from 'lodash-es';
 import type { Api } from './Api.types';
 import type * as T from './Gateway.types';
 import type { GitHubService } from './GitHubService';
@@ -22,17 +22,19 @@ export class Gateway implements T.Gateway {
   public async getRecentMovies(): Promise<T.GetRecentMoviesOutput[]> {
     const imdbIds = await this.queryAllMovies(this.showNRecentMovies);
     const movies = await Promise.all(map(imdbIds, (imdbId) => this.getMovie(imdbId)));
-    const output: T.GetRecentMoviesOutput[] = compact(movies);
+    const moviesCompact = compact(movies);
+    const moviesSorted = orderBy(moviesCompact, ['releaseDate', 'releaseYear', 'title'], ['desc', 'desc', 'asc']);
+    const output: T.GetRecentMoviesOutput[] = moviesSorted;
     return output;
   }
 
   public async searchMovies(query: string): Promise<T.SearchMoviesOutput[]> {
     const queryLower = lowerCase(query);
     const imdbIds = await this.queryAllMovies(this.searchNRecentMovies);
-    console.log(imdbIds);
     const movies = await Promise.all(map(imdbIds, (imdbId) => this.getMovie(imdbId)));
     const moviesCompact = compact(movies);
-    const output: T.SearchMoviesOutput[] = filter(moviesCompact, (m) => includes(lowerCase(m.title), queryLower));
+    const moviesSorted = orderBy(moviesCompact, ['releaseDate', 'releaseYear', 'title'], ['desc', 'desc', 'asc']);
+    const output: T.SearchMoviesOutput[] = filter(moviesSorted, (m) => includes(lowerCase(m.title), queryLower));
     return output;
   }
 
@@ -89,7 +91,7 @@ export class Gateway implements T.Gateway {
       idx++;
     }
 
-    return output;
+    return uniq(output);
   }
 
   private async doGetMovie(imdbId: string): Promise<T.GetRecentMoviesOutput | T.GetMovieOutput | null> {

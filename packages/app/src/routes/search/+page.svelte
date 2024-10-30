@@ -6,7 +6,7 @@
   import { searchService } from '$lib/ui.composition/searchService';
   import ArrowLeftIcon from '$lib/ui.icons/ArrowLeftIcon.svelte';
   import MagnifyingGlassIcon from '$lib/ui.icons/MagnifyingGlassIcon.svelte';
-  import { findIndex } from 'lodash-es';
+  import { findIndex, debounce } from 'lodash-es';
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
 
@@ -31,7 +31,11 @@
   };
 
   $: handleQueryChange(searchQuery);
-  const handleQueryChange = async (searchQuery: string) => (displayMovies = searchQuery === '' ? recentMovies : await searchService.search(searchQuery));
+
+  const handleQueryChange = debounce(async (searchQuery: string) => {
+    displayMovies = searchQuery === '' ? recentMovies : await searchService.search(searchQuery);
+  }, 300);
+
   const handleBackClick = ({}: MouseEvent) => history.back();
   const handleAddClick = ({ detail }: CustomEvent<MyListEventDetail>) => updateIsOnMyList(detail.id, true);
   const handleRemoveClick = ({ detail }: CustomEvent<MyListEventDetail>) => updateIsOnMyList(detail.id, false);
