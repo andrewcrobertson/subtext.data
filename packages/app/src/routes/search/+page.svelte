@@ -53,12 +53,7 @@
   </div>
   <div class="flex space-x-2 items-center w-1/2 sm:w-1/3 md:w-1/4">
     <div class="relative w-full">
-      <input
-        type="text"
-        placeholder="Find a movie"
-        class="h-8 pl-10 pr-4 py-2 w-full bg-black text-white text-sm focus:outline-none"
-        bind:value={searchQuery}
-      />
+      <input type="text" placeholder="Movie title" class="h-8 pl-10 pr-4 py-2 w-full bg-black text-white text-sm focus:outline-none" bind:value={searchQuery} />
       <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-white size-5" />
     </div>
   </div>

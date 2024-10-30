@@ -51,7 +51,7 @@
       <div class="relative w-full">
         <input
           type="text"
-          placeholder="Enter IMDb movie URL or ID"
+          placeholder="IMDb movie URL or ID"
           class="h-10 pl-10 pr-4 py-2 w-full bg-black text-white focus:outline-none"
           bind:value={$idOrUrl}
         />
