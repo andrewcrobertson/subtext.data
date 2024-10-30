@@ -1,6 +1,6 @@
 export enum Mode {
-  Edit = 'Edit',
-  Normal = 'Normal',
+  Offline = 'Offline',
+  Online = 'Online',
 }
 
 export interface ModeChangeEventDetail {

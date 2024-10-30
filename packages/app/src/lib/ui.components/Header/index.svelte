@@ -12,18 +12,18 @@
   import { twMerge } from 'tailwind-merge';
   import * as T from './types';
   export { _class as class };
-  export let mode: T.Mode = T.Mode.Normal;
+  export let mode: T.Mode = T.Mode.Online;
   export let allowEdit = false;
 
   const dispatch = createEventDispatcher();
 
   const onEditClick = () => {
-    mode = mode === T.Mode.Edit ? T.Mode.Normal : T.Mode.Edit;
+    mode = mode === T.Mode.Offline ? T.Mode.Online : T.Mode.Offline;
     dispatch('modechange', { mode });
   };
 </script>
 
-{#if mode === T.Mode.Edit}
+{#if mode === T.Mode.Offline}
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div

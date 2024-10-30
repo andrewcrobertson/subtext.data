@@ -15,7 +15,7 @@ export const formatText = (text: string | null, dflt = ''): string => (text === 
 
 export const formatTextArray = (text: string[], dflt = ''): string => (text.length === 0 ? dflt : text.join(', '));
 
-export const formatRunTime = (runTime: number, dflt: string | null = ''): string | null => {
+export const formatRunTime = (runTime: number | null, dflt: string | null = ''): string | null => {
   if (runTime === null) return dflt;
 
   const hours = Math.floor(runTime / 60);

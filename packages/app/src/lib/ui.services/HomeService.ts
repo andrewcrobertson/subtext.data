@@ -10,7 +10,7 @@ export class HomeService {
 
   public async load(): Promise<T.LoadOutput> {
     const userId = await this.userIdService.getMyId();
-    const myListMovies: T.LoadOutputRecentMovie[] = await this.gateway.getMyListMovies(userId);
+    const myListMovies: T.LoadOutputMovie[] = await this.gateway.getMyListMovies(userId);
     return { myListMovies };
   }
 

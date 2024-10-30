@@ -1,4 +1,4 @@
-export interface LoadOutputRecentMovie {
+export interface LoadOutputMovie {
   imdbId: string;
   title: string;
   releaseDate: string | null;
@@ -16,5 +16,5 @@ export interface LoadOutputRecentMovie {
 }
 
 export interface LoadOutput {
-  myListMovies: LoadOutputRecentMovie[];
+  myListMovies: LoadOutputMovie[];
 }

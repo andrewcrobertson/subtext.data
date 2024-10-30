@@ -1,11 +1,13 @@
 <script lang="ts">
   import { base } from '$app/paths';
   import MinusCircleIcon from '$lib/ui.icons/MinusCircleIcon.svelte';
+  import PlayIcon from '$lib/ui.icons/PlayIcon.svelte';
   import PlusCircleIcon from '$lib/ui.icons/PlusCircleIcon.svelte';
   import { formatRunTime, formatTextArray, formatRated, formatReleaseYear } from '$lib/ui.utils/format';
   import { createEventDispatcher } from 'svelte';
-  import type * as T from './types';
+  import * as T from './types';
   export let movie: T.Movie;
+  export let mode: T.Mode;
 
   const dispatch = createEventDispatcher();
 
@@ -20,12 +22,16 @@
   };
 </script>
 
-<div class="flex items-start overflow-hidden">
-  <a href={`${base}/subtitles/${movie.imdbId}`} class="w-1/2">
+<div class="flex items-start bg-gray-900 overflow-hidden">
+  {#if mode === T.Mode.Play}
+    <a href={`${base}/subtitles/${movie.imdbId}`} class="w-1/2">
+      <img src={movie.posterUrl} alt={movie.title} class="w-full h-auto" />
+    </a>
+  {:else}
     <img src={movie.posterUrl} alt={movie.title} class="w-full h-auto" />
-  </a>
-  <div class="pl-1 w-1/2 flex flex-col justify-between h-full text-sm text-gray-300">
-    <div>
+  {/if}
+  <div class="w-1/2 flex flex-col justify-between h-full text-sm text-gray-300">
+    <div class="px-2">
       <h3 class="text-lg font-semibold text-white">{movie.title}</h3>
       <div class="flex items-center justify-between pb-2">
         <div class="flex space-x-2">
@@ -44,22 +50,33 @@
         {formatTextArray(movie.directors, 'Unknown')}
       </p>
     </div>
-    {#if movie.isOnMyList}
-      <button
-        class="flex items-center justify-center w-full h-10 space-x-1 bg-yellow-500 text-white font-bold hover:bg-yellow-600"
-        on:click={() => onRemoveFromListClick(movie.imdbId)}
-      >
-        <span>Remove</span>
-        <MinusCircleIcon class="text-lg text-white size-6" />
-      </button>
-    {:else}
-      <button
-        class="flex items-center justify-center w-full h-10 space-x-1 bg-gray-800 text-white font-bold hover:bg-gray-900"
-        on:click={() => onAddToListClick(movie.imdbId)}
-      >
-        <span>Add</span>
-        <PlusCircleIcon class="text-lg text-white size-6" />
-      </button>
-    {/if}
+    <div>
+      {#if mode === T.Mode.Play}
+        <a
+          class="flex items-center justify-center w-full h-10 space-x-1 bg-black text-white font-bold hover:bg-gray-800"
+          href={`${base}/subtitles/${movie.imdbId}`}
+        >
+          <span>Play</span>
+          <PlayIcon class="text-lg text-white size-6" />
+        </a>
+      {/if}
+      {#if movie.isOnMyList}
+        <button
+          class="flex items-center justify-center w-full h-10 space-x-1 bg-yellow-500 text-white font-bold hover:bg-yellow-600"
+          on:click={() => onRemoveFromListClick(movie.imdbId)}
+        >
+          <span>Remove</span>
+          <MinusCircleIcon class="text-lg text-white size-6" />
+        </button>
+      {:else}
+        <button
+          class="flex items-center justify-center w-full h-10 space-x-1 bg-gray-800 text-white font-bold hover:bg-gray-900"
+          on:click={() => onAddToListClick(movie.imdbId)}
+        >
+          <span>Add</span>
+          <PlusCircleIcon class="text-lg text-white size-6" />
+        </button>
+      {/if}
+    </div>
   </div>
 </div>

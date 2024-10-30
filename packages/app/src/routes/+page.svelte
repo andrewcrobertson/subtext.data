@@ -1,18 +1,15 @@
 <script lang="ts">
   import { base } from '$app/paths';
-  import Header, { Mode } from '$lib/ui.components/Header';
-  import MovieDetailPanelGrid from '$lib/ui.components/MovieDetailPanelGrid';
-  import type { MyListEventDetail } from '$lib/ui.components/MovieDetailPanelGrid/types';
+  import Header, { Mode as HMode } from '$lib/ui.components/Header';
+  import MovieDetailPanel, { type MyListEventDetail, type Movie, Mode as PMode } from '$lib/ui.components/MovieDetailPanel';
   import TransitionWhenLoaded from '$lib/ui.components/TransitionWhenLoaded';
   import { homeService } from '$lib/ui.composition/homeService';
-  import type { LoadOutputMyListMovie } from '$lib/ui.services/HomeService.types';
   import { findIndex } from 'lodash-es';
   import { onMount, tick } from 'svelte';
-  import { fade } from 'svelte/transition';
 
-  let myListMovies: LoadOutputMyListMovie[] = [];
+  let myListMovies: Movie[] = [];
   let loaded = false;
-  let mode: Mode = Mode.Normal;
+  let mode: HMode = HMode.Online;
 
   const handleRemoveClick = async ({ detail }: CustomEvent<MyListEventDetail>) => {
     const imdbId = detail.id;
@@ -27,8 +24,6 @@
     } catch {
       myListMovies = myListMovies;
     }
-
-    if (myListMovies.length === 0) mode = Mode.Normal;
   };
 
   onMount(async () => {
@@ -42,7 +37,11 @@
 <div class="mt-16"></div>
 <TransitionWhenLoaded {loaded}>
   {#if myListMovies.length > 0}
-    <MovieDetailPanelGrid movies={myListMovies} on:removeclick={handleRemoveClick} />
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-2 overflow-y-auto scrollbar-hide">
+      {#each myListMovies as movie}
+        <MovieDetailPanel mode={PMode.Play} {movie} on:removeclick={handleRemoveClick} />
+      {/each}
+    </div>
   {:else}
     <div class="px-1 mx-auto max-w-screen-md">
       <p class="text-white text-xl mt-4">
