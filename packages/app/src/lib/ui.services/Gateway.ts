@@ -27,6 +27,7 @@ export class Gateway implements T.Gateway {
   public async searchMovies(query: string): Promise<T.SearchMoviesOutput[]> {
     const queryLower = lowerCase(query);
     const imdbIds = await this.queryAllMovies(this.searchNRecentMovies);
+    console.log(imdbIds);
     const movies = await Promise.all(map(imdbIds, (imdbId) => this.getMovie(imdbId)));
     const moviesCompact = compact(movies);
     const output: T.SearchMoviesOutput[] = filter(moviesCompact, (m) => includes(lowerCase(m.title), queryLower));
