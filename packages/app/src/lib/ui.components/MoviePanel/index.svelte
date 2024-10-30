@@ -22,7 +22,7 @@
   };
 </script>
 
-<div class="flex w-full h-full bg-gray-900">
+<div class="flex w-full h-full bg-gray-800">
   <div class="w-1/2">
     {#if mode === T.Mode.Play}
       <a href={`${base}/subtitles/${movie.imdbId}`} class="w-1/2">
@@ -32,9 +32,8 @@
       <img src={movie.posterUrl} alt={movie.title} class="w-full h-full object-cover" />
     {/if}
   </div>
-
   <div class="w-1/2 relative text-sm text-gray-300">
-    <div class="absolute top-0 left-0 right-0 px-2">
+    <div class="absolute top-0 left-0 right-0 p-2">
       <h3 class="text-lg font-semibold text-white">{movie.title}</h3>
       <div class="flex items-center justify-between pb-2">
         <div class="flex space-x-2">
@@ -53,10 +52,10 @@
         {formatTextArray(movie.directors, 'Unknown')}
       </p>
     </div>
-    <div class="absolute bottom-0 left-0 right-0">
+    <div class="absolute bottom-0 left-0 right-0 p-2">
       {#if mode === T.Mode.Play}
         <a
-          class="flex items-center justify-center w-full h-10 space-x-1 bg-black text-white font-bold hover:bg-gray-800"
+          class="flex items-center justify-center w-full h-10 space-x-1 bg-black text-white font-bold hover:bg-gray-900"
           href={`${base}/subtitles/${movie.imdbId}`}
         >
           <span>Play</span>
@@ -73,7 +72,7 @@
         </button>
       {:else}
         <button
-          class="flex items-center justify-center w-full h-10 space-x-1 bg-gray-800 text-white font-bold hover:bg-gray-900"
+          class="flex items-center justify-center w-full h-10 space-x-1 bg-black text-white font-bold hover:bg-gray-900"
           on:click={() => onAddToListClick(movie.imdbId)}
         >
           <span>Add</span>
