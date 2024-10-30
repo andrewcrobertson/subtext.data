@@ -22,16 +22,19 @@
   };
 </script>
 
-<div class="flex items-start bg-gray-900 overflow-hidden">
-  {#if mode === T.Mode.Play}
-    <a href={`${base}/subtitles/${movie.imdbId}`} class="w-1/2">
-      <img src={movie.posterUrl} alt={movie.title} class="w-full h-auto" />
-    </a>
-  {:else}
-    <img src={movie.posterUrl} alt={movie.title} class="w-full h-auto" />
-  {/if}
-  <div class="w-1/2 flex flex-col justify-between h-full text-sm text-gray-300">
-    <div class="px-2">
+<div class="flex w-full h-full bg-gray-900">
+  <div class="w-1/2">
+    {#if mode === T.Mode.Play}
+      <a href={`${base}/subtitles/${movie.imdbId}`} class="w-1/2">
+        <img src={movie.posterUrl} alt={movie.title} class="w-full h-full object-cover" />
+      </a>
+    {:else}
+      <img src={movie.posterUrl} alt={movie.title} class="w-full h-full object-cover" />
+    {/if}
+  </div>
+
+  <div class="w-1/2 relative text-sm text-gray-300">
+    <div class="absolute top-0 left-0 right-0 px-2">
       <h3 class="text-lg font-semibold text-white">{movie.title}</h3>
       <div class="flex items-center justify-between pb-2">
         <div class="flex space-x-2">
@@ -50,7 +53,7 @@
         {formatTextArray(movie.directors, 'Unknown')}
       </p>
     </div>
-    <div>
+    <div class="absolute bottom-0 left-0 right-0">
       {#if mode === T.Mode.Play}
         <a
           class="flex items-center justify-center w-full h-10 space-x-1 bg-black text-white font-bold hover:bg-gray-800"
