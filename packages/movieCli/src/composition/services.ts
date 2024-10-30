@@ -1,5 +1,5 @@
 import { FileManager } from '$services/fileManager/FileManager';
-import { GitHubApi } from '$services/github/_GithubApi';
+import { GitHubApi } from '$services/github/GitHubApi';
 import { Handler } from '$services/handlers/Handler';
 import { Logger } from '$services/logger/Logger';
 import { MovieReader } from '$services/movieReader/MovieReader';
