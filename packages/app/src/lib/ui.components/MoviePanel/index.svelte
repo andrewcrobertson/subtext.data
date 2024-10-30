@@ -46,11 +46,14 @@
         <span class="text-sm text-gray-500">{movie.genres.length === 1 ? 'Genre' : 'Genres'}:</span>
         {formatTextArray(movie.genres, 'Unknown')}
       </p>
-      <p class="hidden sm:block"><span class="text-sm text-gray-500">Cast:</span> {formatTextArray(movie.actors, 'Unknown')}</p>
+      <p class=""><span class="text-sm text-gray-500 hidden sm:block">Cast:&nbsp;</span>{formatTextArray(movie.actors, 'Unknown')}</p>
       <p class="hidden sm:block">
         <span class="text-sm text-gray-500">{movie.directors.length === 1 ? 'Director' : 'Directors'}:</span>
         {formatTextArray(movie.directors, 'Unknown')}
       </p>
+      <!-- <p class="hidden sm:block pt-4 mt-4 border-t border-gray-500">
+        {movie.plot}
+      </p> -->
     </div>
     <div class="absolute bottom-0 left-0 right-0 p-2">
       {#if mode === T.Mode.Play}

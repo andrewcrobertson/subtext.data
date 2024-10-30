@@ -66,10 +66,24 @@ export interface GetMovieOutput {
   isOnMyList: boolean;
 }
 
+export interface GetMovieWithSubtitlesOutput {
+  imdbId: string;
+  title: string;
+  runTime: number | null;
+  subtitles: SubtitleBlock[];
+}
+
+export interface SubtitleBlock {
+  start: number;
+  end: number;
+  text: string;
+}
+
 export interface Gateway {
   getRecentMovies: () => Promise<GetRecentMoviesOutput[]>;
   searchMovies: (query: string) => Promise<SearchMoviesOutput[]>;
   getMovie: (imdbId: string) => Promise<GetMovieOutput | null>;
+  getMovieWithSubtitles: (imdbId: string) => Promise<GetMovieWithSubtitlesOutput | null>;
   getMyListMovies: (userId: string) => Promise<GetMyListMoviesOutput[]>;
   addToMyList: (userId: string, imdbId: string) => Promise<void>;
   removeFromMyList: (userId: string, imdbId: string) => Promise<void>;

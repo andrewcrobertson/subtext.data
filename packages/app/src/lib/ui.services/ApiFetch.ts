@@ -19,11 +19,19 @@ export class ApiFetch implements T.Api {
     return data;
   }
 
-  public async getSubtitle(imdbId: string, subtitleId: string): Promise<T.GetSubtitleOutput | null> {
+  public async getSubtitle(imdbId: string, subtitleId: string): Promise<T.GetSubtitleMetaOutput | null> {
     const url = `${this.baseUrl}/movies/${imdbId}/subtitles/${subtitleId}/index.json`;
     const res = await fetch(url);
     if (res.status === 404) return null;
-    const data: T.GetSubtitleOutput = await res.json();
+    const data: T.GetSubtitleMetaOutput = await res.json();
+    return data;
+  }
+
+  public async getSubtitleFile(imdbId: string, subtitleId: string, fileName: string): Promise<string | null> {
+    const url = `${this.baseUrl}/movies/${imdbId}/subtitles/${subtitleId}/${fileName}`;
+    const res = await fetch(url);
+    if (res.status === 404) return null;
+    const data = await res.text();
     return data;
   }
 }

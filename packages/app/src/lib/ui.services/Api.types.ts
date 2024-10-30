@@ -21,7 +21,7 @@ export interface GetMovieOutput {
   isAvailable: boolean;
 }
 
-export interface GetSubtitleOutput {
+export interface GetSubtitleMetaOutput {
   subtitleId: string;
   source: string;
   author: string;
@@ -33,5 +33,6 @@ export interface GetSubtitleOutput {
 export interface Api {
   getReleaseDateAsc: (pageNumber: number) => Promise<GetReleaseDateAscOutput | null>;
   getMovie: (imdbId: string) => Promise<GetMovieOutput | null>;
-  getSubtitle: (imdbId: string, subtitleId: string) => Promise<GetSubtitleOutput | null>;
+  getSubtitle: (imdbId: string, subtitleId: string) => Promise<GetSubtitleMetaOutput | null>;
+  getSubtitleFile: (imdbId: string, subtitleId: string, subtextFileName: string) => Promise<string | null>;
 }

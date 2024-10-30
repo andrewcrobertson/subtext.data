@@ -1,22 +1,21 @@
 <script lang="ts">
+  import { page } from '$app/stores';
   import { FontSizeEnum } from '$lib/isomorphic.types/FontSizeEnum';
   import { SubtitleStream } from '$lib/isomorphic.services/SubtitleStream';
   import { SubtitleStreamStateEnum } from '$lib/isomorphic.types/SubtitleStreamStateEnum';
   import { formatMsAsTime } from '$lib/isomorphic.utils/formatMsAsTime';
-  import { parseSrt } from '$lib/isomorphic.utils/parseSrt';
   import BottomBar from '$lib/ui.components/BottomBar';
   import type { ProgressEventDetail } from '$lib/ui.components/BottomBar/types';
   import Overlay from '$lib/ui.components/Overlay';
   import TopBar from '$lib/ui.components/TopBar';
+  import { watchService } from '$lib/ui.composition/watchService';
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
-  import type { PageData } from './$types';
-  export let data: PageData;
 
   let frame = { subtitle: '', progress: 0 };
   let elapsedTime = '';
   let controlsVisible = false;
-  let title = data.title;
+  let title: string;
   let controlsTimeout: NodeJS.Timeout;
   let overlayTimeout: NodeJS.Timeout;
   let overlayVisible = false;
@@ -25,7 +24,7 @@
 
   const inactivityDelay = 3000;
   const overlayDelay = 6000;
-  const subtitleStream = new SubtitleStream(parseSrt(data.subtitles));
+  let subtitleStream: SubtitleStream;
 
   const handleProgressClick = ({ detail }: CustomEvent<ProgressEventDetail>) => subtitleStream.goTo(detail.progress);
   const handleBackClick = () => history.back();
@@ -77,14 +76,13 @@
     if (streamState === SubtitleStreamStateEnum.Paused) scheduleShowOverlay();
   };
 
-  onMount(() => {
+  onMount(async () => {
+    const loadRes = await watchService.load($page.params.id);
+    title = loadRes.movie.title;
+    subtitleStream = new SubtitleStream(loadRes.movie.subtitles);
     showControls();
     scheduleShowOverlay();
-    const interval = setInterval(() => handleInterval(), 100);
-    return () => {
-      clearTimeout(interval);
-      clearTimeout(overlayTimeout);
-    };
+    setInterval(() => handleInterval(), 100);
   });
 </script>
 

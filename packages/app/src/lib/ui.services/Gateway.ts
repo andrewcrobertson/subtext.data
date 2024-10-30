@@ -1,4 +1,5 @@
-import { includes } from 'lodash-es';
+import { convertSubtitles } from '$lib/isomorphic.utils/convertSubtitles';
+import { compact, filter, includes, lowerCase, map } from 'lodash-es';
 import type { Api } from './Api.types';
 import type * as T from './Gateway.types';
 import type { MyListMovieIdManager } from './MyListMovieIdManager';
@@ -13,46 +14,25 @@ export class Gateway implements T.Gateway {
   ) {}
 
   public async getRecentMovies(): Promise<T.GetRecentMoviesOutput[]> {
-    const output: T.GetRecentMoviesOutput[] = [];
     const imdbIds = await this.queryAllMovies(this.showNRecentMovies);
-    for (let i = 0; i < imdbIds.length; i++) {
-      const imdbId = imdbIds[i];
-      const movie = await this.getMovie(imdbId);
-      if (movie !== null) output.push(movie);
-    }
-
+    const movies = await Promise.all(map(imdbIds, (imdbId) => this.getMovie(imdbId)));
+    const output: T.GetRecentMoviesOutput[] = compact(movies);
     return output;
   }
 
   public async searchMovies(query: string): Promise<T.SearchMoviesOutput[]> {
-    const output: T.SearchMoviesOutput[] = [];
-    const allMovies: T.SearchMoviesOutput[] = [];
+    const queryLower = lowerCase(query);
     const imdbIds = await this.queryAllMovies(this.searchNRecentMovies);
-    for (let i = 0; i < imdbIds.length; i++) {
-      const imdbId = imdbIds[i];
-      const movie = await this.getMovie(imdbId);
-      if (movie !== null) allMovies.push(movie);
-    }
-
-    for (let i = 0; i < allMovies.length; i++) {
-      const { title } = allMovies[i];
-      const match = title.toLowerCase().includes(query.toLowerCase());
-      if (match) output.push(allMovies[i]);
-    }
-
+    const movies = await Promise.all(map(imdbIds, (imdbId) => this.getMovie(imdbId)));
+    const moviesCompact = compact(movies);
+    const output: T.SearchMoviesOutput[] = filter(moviesCompact, (m) => includes(m.title, queryLower));
     return output;
   }
 
   public async getMyListMovies(userId: string): Promise<T.GetMyListMoviesOutput[]> {
-    const myListMovieIds = await this.myListMovieIdManager.get();
-
-    const output: T.GetMyListMoviesOutput[] = [];
-    for (let i = 0; i < myListMovieIds.length; i++) {
-      const imdbId = myListMovieIds[i];
-      const movie = await this.doGetMovie(imdbId);
-      if (movie !== null) output.push(movie);
-    }
-
+    const imdbIds = await this.myListMovieIdManager.get();
+    const movies = await Promise.all(map(imdbIds, (imdbId) => this.getMovie(imdbId)));
+    const output: T.GetMyListMoviesOutput[] = compact(movies);
     return output;
   }
 
@@ -69,6 +49,19 @@ export class Gateway implements T.Gateway {
     return movie === null ? null : movie;
   }
 
+  public async getMovieWithSubtitles(imdbId: string): Promise<T.GetMovieWithSubtitlesOutput | null> {
+    const movie = await this.api.getMovie(imdbId);
+    if (movie === null || !movie.isAvailable || movie.subtitleIds.length === 0) return null;
+
+    const subtitle = await this.api.getSubtitle(imdbId, movie.subtitleIds[0]);
+    if (subtitle === null) return null;
+
+    const subtitleFile = await this.api.getSubtitleFile(imdbId, subtitle.subtitleId, subtitle.subtextFileName);
+    const subtitles = convertSubtitles(subtitleFile ?? '');
+    const { title, runTime } = movie;
+    return { imdbId, title, runTime, subtitles };
+  }
+
   public async queryAllMovies(maxMovies: number): Promise<string[]> {
     const output: string[] = [];
 
@@ -77,8 +70,7 @@ export class Gateway implements T.Gateway {
       const page = await this.api.getReleaseDateAsc(idx);
       if (page === null) break;
       for (let i = 0; i < page.imdbIds.length; i++) {
-        const imdbId = page.imdbIds[i];
-        output.push(imdbId);
+        output.push(page.imdbIds[i]);
         if (output.length >= maxMovies) break;
       }
 
