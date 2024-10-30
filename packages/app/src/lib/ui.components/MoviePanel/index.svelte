@@ -45,16 +45,20 @@
         </div>
         <p class="text-xs border border-gray-400 bg-gray-800 px-3">{formatRated(movie.rated, '?')}</p>
       </div>
-      <p class="hidden sm:block">
+      {formatTextArray(movie.actors, 'Unknown')}
+      <!-- <p class="hidden sm:block">
         <span class="text-sm text-gray-500">{movie.genres.length === 1 ? 'Genre' : 'Genres'}:</span>
         {formatTextArray(movie.genres, 'Unknown')}
       </p>
-      <p class=""><span class="text-sm text-gray-500 hidden sm:block">Cast:&nbsp;</span>{formatTextArray(movie.actors, 'Unknown')}</p>
+      <p class="hidden sm:block">
+        <span class="text-sm text-gray-500">Cast:</span>
+        {formatTextArray(movie.actors, 'Unknown')}
+      </p>
       <p class="hidden sm:block">
         <span class="text-sm text-gray-500">{movie.directors.length === 1 ? 'Director' : 'Directors'}:</span>
         {formatTextArray(movie.directors, 'Unknown')}
       </p>
-      <!-- <p class="hidden sm:block pt-4 mt-4 border-t border-gray-500">
+      <p class="hidden sm:block">
         {movie.plot}
       </p> -->
     </div>
