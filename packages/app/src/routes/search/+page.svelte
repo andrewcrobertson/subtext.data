@@ -34,6 +34,7 @@
 
   const handleQueryChange = debounce(async (searchQuery: string) => {
     displayMovies = searchQuery === '' ? recentMovies : await searchService.search(searchQuery);
+    if (displayMovies.length === 0 && doShowRequestAlert) requestAlertVisible = true;
   }, 300);
 
   const handleBackClick = ({}: MouseEvent) => history.back();
