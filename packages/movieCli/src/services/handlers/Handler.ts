@@ -1,4 +1,5 @@
 import { FileManager } from '$services/fileManager/FileManager';
+import { GitHubApi } from '$services/github/_GithubApi';
 import type { Logger } from '$services/logger/Logger';
 import type { MovieReader, ReadResponseData } from '$services/movieReader/MovieReader.types';
 import { parseSrt3 } from '$utils/parseSrt';
@@ -9,6 +10,7 @@ import type * as T from './Handler.types';
 
 export class Handler {
   public constructor(
+    private readonly gitHubApi: GitHubApi,
     private readonly downloader: MovieReader,
     private readonly fileManager: FileManager,
     private readonly logger: Logger

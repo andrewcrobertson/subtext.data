@@ -1,6 +1,4 @@
-import { chain } from 'lodash';
-
-export class GithubApi {
+export class GitHubApi {
   public constructor(
     private readonly apiUrlBase: string,
     private readonly uiUrlBase: string,
@@ -11,14 +9,9 @@ export class GithubApi {
     return `${this.uiUrlBase}/issues/${issueNumber}`;
   }
 
-  public async getOpenIssues(label: string) {
-    const issuesRaw: any = await this.get(`/issues?state=open&labels=${label}`);
-    const issues = chain(issuesRaw)
-      .sortBy('number')
-      .map((i: any) => ({ gitHubIssueNumber: i.number, imdbId: i.title }))
-      .value();
-
-    return issues;
+  public async getIssue(number: number) {
+    const issue: any = await this.get(`/issues/${number}`);
+    return issue;
   }
 
   public async addComment(issueNumber: number, comment: string) {
