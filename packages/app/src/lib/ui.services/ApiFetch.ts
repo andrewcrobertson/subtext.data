@@ -4,7 +4,7 @@ export class ApiFetch implements T.Api {
   public constructor(private readonly baseUrl: string) {}
 
   public async getReleaseDateAsc(pageNumber: number): Promise<T.GetReleaseDateAscOutput | null> {
-    const url = `${this.baseUrl}/movies/index.${pageNumber}.json`;
+    const url = `${this.baseUrl}/queries/release-date-asc/${pageNumber}/index.json`;
     const res = await fetch(url);
     if (res.status === 404) return null;
     const data: T.GetReleaseDateAscOutput = await res.json();
