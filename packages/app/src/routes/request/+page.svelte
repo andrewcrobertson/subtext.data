@@ -52,7 +52,7 @@
         <input
           type="text"
           placeholder="IMDb movie URL or ID"
-          class="h-10 pl-10 pr-4 py-2 w-full bg-black text-white focus:outline-none"
+          class="h-10 pl-10 pr-4 py-2 w-full bg-black text-white text-lg focus:outline-none"
           bind:value={$idOrUrl}
         />
         <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-white size-5" />
