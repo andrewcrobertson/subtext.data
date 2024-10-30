@@ -53,7 +53,7 @@
     </Alert>
     <Alert>
       <p class="text-white text-xl">
-        If you can't find the movie you want, you can <a class="font-bold text-yellow-500 underline" href={`${base}/request`}>request it</a>.
+        If you can't find the movie you are searching for, you can <a class="font-bold text-yellow-500 underline" href={`${base}/request`}>request it</a>.
       </p>
     </Alert>
   {/if}

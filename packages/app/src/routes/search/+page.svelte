@@ -82,9 +82,7 @@
       <div transition:fade={{ duration: 1000 }} class="fixed bottom-0 left-0 right-0 bg-black">
         <Alert>
           <p class="text-white text-xl">
-            Can't find the movie you want? Would you like to <a class="font-bold text-yellow-500 underline" href={`${base}/request?q=${searchQuery}`}
-              >request it</a
-            >?
+            If you can't find the movie you are searching for, you can <a class="font-bold text-yellow-500 underline" href={`${base}/request`}>request it</a>.
           </p>
         </Alert>
       </div>
