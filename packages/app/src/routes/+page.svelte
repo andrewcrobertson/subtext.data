@@ -1,7 +1,7 @@
 <script lang="ts">
   import { base } from '$app/paths';
   import Header, { Mode as HMode } from '$lib/ui.components/Header';
-  import MovieDetailPanel, { type MyListEventDetail, type Movie, Mode as PMode } from '$lib/ui.components/MovieDetailPanel';
+  import MoviePanel, { type MyListEventDetail, type Movie, Mode as PMode } from '$lib/ui.components/MoviePanel';
   import TransitionWhenLoaded from '$lib/ui.components/TransitionWhenLoaded';
   import { homeService } from '$lib/ui.composition/homeService';
   import { findIndex } from 'lodash-es';
@@ -39,7 +39,7 @@
   {#if myListMovies.length > 0}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-2 overflow-y-auto scrollbar-hide">
       {#each myListMovies as movie}
-        <MovieDetailPanel mode={PMode.Play} {movie} on:removeclick={handleRemoveClick} />
+        <MoviePanel mode={PMode.Play} {movie} on:removeclick={handleRemoveClick} />
       {/each}
     </div>
   {:else}
