@@ -7,6 +7,8 @@ import type { ImageLoader } from './ImageLoader';
 import type { MyListMovieIdManager } from './MyListMovieIdManager';
 
 export class Gateway implements T.Gateway {
+  private extraImdbIds: string[] = [];
+
   public constructor(
     private readonly baseUrl: string,
     private readonly showNRecentMovies: number,
@@ -42,6 +44,7 @@ export class Gateway implements T.Gateway {
   }
 
   public async addToMyList(userId: string, imdbId: string): Promise<void> {
+    this.extraImdbIds.push(imdbId);
     await this.myListMovieIdManager.add(imdbId);
   }
 
@@ -66,11 +69,12 @@ export class Gateway implements T.Gateway {
   }
 
   public async submitAddMovieRequestIssue(userId: string, imdbId: string) {
+    this.extraImdbIds.push(imdbId);
     return await this.gitHubService.submitAddMovieRequestIssue(userId, imdbId);
   }
 
   public async queryAllMovies(maxMovies: number): Promise<string[]> {
-    const output: string[] = [];
+    const output: string[] = this.extraImdbIds;
 
     let idx = 1;
     while (true) {

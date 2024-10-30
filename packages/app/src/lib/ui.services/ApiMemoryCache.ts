@@ -10,12 +10,11 @@ export class ApiMemoryCache implements T.Api {
   public constructor(private readonly instance: T.Api) {}
 
   public async getReleaseDateAsc(pageNumber: number): Promise<T.GetReleaseDateAscOutput | null> {
-    return await this.instance.getReleaseDateAsc(pageNumber);
-    // if (isNil(this.releaseDates[pageNumber])) {
-    //   this.releaseDates[pageNumber] = await this.instance.getReleaseDateAsc(pageNumber);
-    // }
+    if (isNil(this.releaseDates[pageNumber])) {
+      this.releaseDates[pageNumber] = await this.instance.getReleaseDateAsc(pageNumber);
+    }
 
-    // return this.releaseDates[pageNumber];
+    return this.releaseDates[pageNumber];
   }
 
   public async getMovie(imdbId: string): Promise<T.GetMovieOutput | null> {
