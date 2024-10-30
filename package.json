@@ -11,14 +11,10 @@
     "checktypes": "pnpm run -r --workspace-concurrency 1 checktypes",
     "clean": "pnpm run -r clean",
     "dev:app": "pnpm  --filter \"app\" dev",
-    "dev:download.bak": "dotenvx run -f ./packages/movieCli/.env -- tsx --tsconfig ./packages/movieCli/tsconfig.json ./packages/movieCli/src/index.ts download --meta-dir ./__data__/meta --subtitle-dir ./__data__/subtitles --poster-dir ./__data__/posters",
-    "dev:download": "dotenvx run -f ./packages/movieCli/.env -- tsx --tsconfig ./packages/movieCli/tsconfig.json ./packages/movieCli/src/index.ts load -u subtext-bot -i tt0062622 -d ./__data__ -f",
     "format": "prettier --write \"**/*.{ts,tsx,md,json,svelte}\"",
     "prepare": "husky",
     "index": "dotenvx run -f ./packages/movieCli/.env -- tsx --tsconfig ./packages/movieCli/tsconfig.json ./packages/movieCli/src/index.ts index -u subtext-bot -d ./__data__",
     "load": "dotenvx run -f ./packages/movieCli/.env -- tsx --tsconfig ./packages/movieCli/tsconfig.json ./packages/movieCli/src/index.ts load -u subtext-bot -d ./__data__ -f",
-    "download:01": "tsx --tsconfig ./packages/download/tsconfig.json ./packages/download/src/index.ts --meta-dir ./__data__/meta --subtitle-dir ./__data__/subtitles --poster-dir ./__data__/posters",
-    "download:02": "shx cp -r ./__data__/posters ./packages/app/static",
     "test": "pnpm run -r --workspace-concurrency 1 test"
   },
   "devDependencies": {

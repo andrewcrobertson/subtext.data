@@ -1,9 +1,9 @@
 import { FileManager } from '$services/fileManager/FileManager';
-import { GitHubApi } from '$services/github/_GithubApi';
+import type { GitHubApi } from '$services/github/GitHubApi';
 import type { Logger } from '$services/logger/Logger';
 import type { MovieReader, ReadResponseData } from '$services/movieReader/MovieReader.types';
 import { parseSrt3 } from '$utils/parseSrt';
-import { isError, map, orderBy } from 'lodash';
+import { isError, join, map, orderBy } from 'lodash';
 import murmurhash from 'murmurhash';
 import path from 'path';
 import type * as T from './Handler.types';
@@ -16,18 +16,30 @@ export class Handler {
     private readonly logger: Logger
   ) {}
 
-  public async load({ userId, imdbId, force }: T.LoadInput) {
+  public async load({ userId, imdbId: gitHubIssueNumber, force }: T.LoadInput) {
+    const gitHubComments: string[] = [];
     this.logger.infoBlank();
+
+    const issue = await this.gitHubApi.getIssue(<any>gitHubIssueNumber);
+    const imdbId = issue.title;
 
     const existingMovieData = await this.fileManager.getMovieData(imdbId);
     if (!force && existingMovieData !== null) {
       this.logger.infoTitle(existingMovieData.title, imdbId);
       this.logger.infoMovieAlreadyDownloaded();
+      gitHubComments.push(`:clapper: **${existingMovieData.title}**`);
+      gitHubComments.push(`- Already downloaded`);
+
+      await this.gitHubApi.addComment(<any>gitHubIssueNumber, join(gitHubComments, '\n'));
+      await this.gitHubApi.close(<any>gitHubIssueNumber);
     } else {
       const readRes = await this.downloader.read(imdbId);
       const errorText = map(readRes.errors, (error) => (isError(error) ? error.message : (<any>error).toString()));
 
-      this.logger.infoTitle(readRes.data?.title ?? 'Unknown Title', imdbId);
+      const title = readRes.data?.title ?? 'Unknown Title';
+      this.logger.infoTitle(title, imdbId);
+      gitHubComments.push(`:clapper: **${title}**`);
+
       for (let i = 0; i < errorText.length; i++) {
         this.logger.errorMessage(errorText[i]);
       }
@@ -36,8 +48,17 @@ export class Handler {
         const timestamp = new Date().toISOString();
 
         const subtitleCount = readRes.data.subtitles.length ?? 0;
+        const subtitleP11n = subtitleCount === 1 ? 'subtitle' : 'subtitles';
         this.logger.infoMovieSubtitlesFound(subtitleCount);
+        gitHubComments.push(`- ${subtitleCount} ${subtitleP11n} found`);
         const { subtitles, movieData } = this.toMovie(imdbId, readRes.data!);
+
+        if (errorText.length > 0) {
+          gitHubComments.push(``);
+          gitHubComments.push(`:no_entry: **Errors**`);
+          gitHubComments.push('- ' + join(errorText, '\n- '));
+          gitHubComments.push(``);
+        }
 
         const movieDataFile = await this.fileManager.writeMovieData(movieData, userId, timestamp);
         this.logger.infoSavedMetaFile(movieDataFile);
@@ -56,6 +77,9 @@ export class Handler {
           const subtitleFile = await this.fileManager.writeSubtitleText(imdbId, data, subtextValue, userId, timestamp);
           this.logger.infoSavedSubtitleFile(subtitleFile);
         }
+
+        await this.gitHubApi.addComment(<any>gitHubIssueNumber, join(gitHubComments, '\n'));
+        await this.gitHubApi.close(<any>gitHubIssueNumber);
       } else {
       }
     }

@@ -4,8 +4,8 @@ import type { Config } from './config.types';
 export const config: Config = {
   gitHub: {
     token: environment.REPO_TOKEN,
-    apiUrlBase: 'https://api.gitHub.com/repos/andrewcrobertson/subtext',
-    uiUrlBase: 'https://gitHub.com/andrewcrobertson/subtext',
+    apiUrlBase: 'https://api.gitHub.com/repos/andrewcrobertson/subtext.data',
+    uiUrlBase: 'https://gitHub.com/andrewcrobertson/subtext.data',
   },
   omdb: {
     token: environment.OMDB_TOKEN,

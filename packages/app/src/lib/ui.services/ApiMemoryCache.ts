@@ -1,3 +1,4 @@
+import { isNil } from 'lodash-es';
 import type * as T from './Api.types';
 
 export class ApiMemoryCache implements T.Api {
@@ -9,7 +10,7 @@ export class ApiMemoryCache implements T.Api {
   public constructor(private readonly instance: T.Api) {}
 
   public async getReleaseDateAsc(pageNumber: number): Promise<T.GetReleaseDateAscOutput | null> {
-    if (this.releaseDates[pageNumber] === undefined) {
+    if (isNil(this.releaseDates[pageNumber])) {
       this.releaseDates[pageNumber] = await this.instance.getReleaseDateAsc(pageNumber);
     }
 
@@ -17,7 +18,7 @@ export class ApiMemoryCache implements T.Api {
   }
 
   public async getMovie(imdbId: string): Promise<T.GetMovieOutput | null> {
-    if (this.movies[imdbId] === undefined) {
+    if (isNil(this.movies[imdbId])) {
       this.movies[imdbId] = await this.instance.getMovie(imdbId);
     }
 
@@ -25,7 +26,7 @@ export class ApiMemoryCache implements T.Api {
   }
 
   public async getSubtitle(imdbId: string, subtitleId: string): Promise<T.GetSubtitleMetaOutput | null> {
-    if (this.subtitles[subtitleId] === undefined) {
+    if (isNil(this.subtitles[subtitleId])) {
       this.subtitles[subtitleId] = await this.instance.getSubtitle(imdbId, subtitleId);
     }
 
@@ -33,7 +34,7 @@ export class ApiMemoryCache implements T.Api {
   }
 
   public async getSubtitleFile(imdbId: string, subtitleId: string, fileName: string): Promise<string | null> {
-    if (this.subtitleFiles[subtitleId] === undefined) {
+    if (isNil(this.subtitleFiles[subtitleId])) {
       this.subtitleFiles[subtitleId] = await this.instance.getSubtitleFile(imdbId, subtitleId, fileName);
     }
 
