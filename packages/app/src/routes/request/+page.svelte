@@ -42,8 +42,8 @@
   {#if requestOutput === null}
     <div class="pb-10">
       <p class="text-lg mb-4">
-        To request a movie, <a class="font-bold text-yellow-500 underline" href={requestService.getImdbQueryUrl(query)}>search for the movie on IMDb</a> and
-        submit the movie's IMDb URL or ID below. For more information, read about
+        To make a request, <a class="font-bold text-yellow-500 underline" href={requestService.getImdbQueryUrl(query)}>find your movie on IMDb</a> and submit
+        its URL or ID below. For more details, check out
         <a class="font-bold text-yellow-500 underline" href="https://developer.imdb.com/documentation/key-concepts" target="_blank">IMDb data concepts</a>.
       </p>
     </div>
@@ -52,7 +52,7 @@
         <input
           type="text"
           placeholder="Enter IMDb movie URL or ID"
-          class="h-10 pl-10 pr-4 py-2 w-full bg-black text-white text-sm focus:outline-none"
+          class="h-10 pl-10 pr-4 py-2 w-full bg-black text-white focus:outline-none"
           bind:value={$idOrUrl}
         />
         <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-white size-5" />
@@ -70,7 +70,7 @@
     </Alert>
   {:else if requestOutput.code === 'ALREADY_EXISTS'}
     <Alert>
-      <p class="text-white text-xl">Good news! We've already got a movie that matches your request.</p>
+      <p class="text-white text-xl">Good news! We've got the movie that matches your request.</p>
     </Alert>
     <MoviePanel class="p-2" mode={PMode.View} movie={requestOutput.movie} on:addclick={handleAddClick} on:removeclick={handleRemoveClick} />
   {:else if requestOutput.code === 'REQUEST_SUBMITTED'}
