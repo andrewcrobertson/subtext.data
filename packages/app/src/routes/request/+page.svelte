@@ -4,6 +4,7 @@
   import { requestService } from '$lib/ui.composition/requestService';
   import type { SubmitRequestOutput } from '$lib/ui.services/RequestService.types';
   import ArrowLeftIcon from '$lib/ui.icons/ArrowLeftIcon.svelte';
+  import MagnifyingGlassIcon from '$lib/ui.icons/MagnifyingGlassIcon.svelte';
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
 
@@ -47,12 +48,15 @@
       </p>
     </div>
     <form on:submit|preventDefault={handleSubmit} class="flex items-center gap-2">
-      <input
-        type="text"
-        class="w-full h-10 p-2 bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-yellow-500"
-        placeholder="Enter IMDb movie URL or ID"
-        bind:value={$idOrUrl}
-      />
+      <div class="relative w-full">
+        <input
+          type="text"
+          placeholder="Enter IMDb movie URL or ID"
+          class="h-10 pl-10 pr-4 py-2 w-full bg-black text-white text-sm focus:outline-none"
+          bind:value={$idOrUrl}
+        />
+        <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-white size-5" />
+      </div>
       <button type="submit" class="h-10 px-4 bg-yellow-500 text-white font-bold hover:bg-yellow-600">Submit</button>
     </form>
   {:else if requestOutput.code === 'INVALID_INPUT'}
