@@ -46,14 +46,14 @@
   {:else}
     <Alert>
       <p class="text-white text-xl">
-        You currently don't have any movies in your list. Would you like to <a class="font-bold text-yellow-500 underline" href={`${base}/search`}
-          >search for a movie</a
-        >?
+        It looks like your movie list is empty! Why not <a class="font-bold text-yellow-500 underline" href={`${base}/search`}>search for a movie</a> and start building
+        your collection?
       </p>
     </Alert>
     <Alert>
       <p class="text-white text-xl">
-        If you can't find the movie you are searching for, you can <a class="font-bold text-yellow-500 underline" href={`${base}/request`}>request it</a>.
+        Can't find the movie you're looking for? Feel free to <a class="font-bold text-yellow-500 underline" href={`${base}/request`}>make a request</a>, and
+        we'll do our best to add it!
       </p>
     </Alert>
   {/if}
