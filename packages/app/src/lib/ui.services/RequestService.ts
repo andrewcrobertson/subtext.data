@@ -1,12 +1,10 @@
 import type { Gateway } from './Gateway.types';
-import type { GitHubService } from './GitHubService';
 import type * as T from './RequestService.types';
 import type { UserIdService } from './UserIdService';
 
 export class RequestService {
   public constructor(
     private readonly userIdService: UserIdService,
-    private readonly gitHubService: GitHubService,
     private readonly gateway: Gateway
   ) {}
 
@@ -19,7 +17,7 @@ export class RequestService {
     const movie = await this.gateway.getMovie(imdbId);
     if (movie !== null) return { code: 'ALREADY_EXISTS', movie };
 
-    const success = await this.gitHubService.submitAddMovieRequestIssue(userId, imdbId);
+    const success = await this.gateway.submitAddMovieRequestIssue(userId, imdbId);
     if (success) return { code: 'REQUEST_SUBMITTED' };
 
     return { code: 'UNEXPECTED_ERROR' };

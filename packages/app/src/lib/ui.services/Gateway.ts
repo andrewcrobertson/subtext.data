@@ -2,6 +2,7 @@ import { convertSubtitles } from '$lib/isomorphic.utils/convertSubtitles';
 import { compact, filter, includes, lowerCase, map } from 'lodash-es';
 import type { Api } from './Api.types';
 import type * as T from './Gateway.types';
+import type { GitHubService } from './GitHubService';
 import type { ImageLoader } from './ImageLoader';
 import type { MyListMovieIdManager } from './MyListMovieIdManager';
 
@@ -11,6 +12,7 @@ export class Gateway implements T.Gateway {
     private readonly showNRecentMovies: number,
     private readonly searchNRecentMovies: number,
     private readonly api: Api,
+    private readonly gitHubService: GitHubService,
     private readonly myListMovieIdManager: MyListMovieIdManager,
     private readonly imageLoader: ImageLoader
   ) {}
@@ -60,6 +62,10 @@ export class Gateway implements T.Gateway {
 
     const { title, runTime } = movie;
     return { imdbId, title, runTime, subtitles };
+  }
+
+  public async submitAddMovieRequestIssue(userId: string, imdbId: string) {
+    return await this.gitHubService.submitAddMovieRequestIssue(userId, imdbId);
   }
 
   public async queryAllMovies(maxMovies: number): Promise<string[]> {
