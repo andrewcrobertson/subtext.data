@@ -52,13 +52,10 @@
     <p class="text-white font-semibold text-lg">Search</p>
   </div>
   <div class="flex space-x-2 items-center w-1/2 sm:w-1/3 md:w-1/4">
-    <input
-      type="text"
-      class="w-full h-6 p-1 bg-gray-800 text-white text-sm border border-gray-700 focus:outline-none focus:border-yellow-500"
-      placeholder="Find a movie"
-      bind:value={searchQuery}
-    />
-    <MagnifyingGlassIcon class="text-white size-5" />
+    <div class="relative w-full">
+      <input type="text" placeholder="Find a movie" class="h-8 pl-10 pr-4 py-2 w-full bg-black text-white text-sm focus:outline-none" />
+      <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-white size-5" />
+    </div>
   </div>
 </div>
 <div class="mt-16"></div>
@@ -72,7 +69,7 @@
     </Alert>
   {:else}
     {#if displayMovies.length > 0}
-      <div class:pb-24={requestAlertVisible} class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-2 overflow-y-auto scrollbar-hide">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 p-2 overflow-y-auto scrollbar-hide">
         {#each displayMovies as movie}
           <MoviePanel mode={PMode.View} {movie} on:addclick={handleAddClick} on:removeclick={handleRemoveClick} />
         {/each}
