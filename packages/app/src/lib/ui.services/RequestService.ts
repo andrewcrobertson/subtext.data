@@ -5,13 +5,13 @@ import type { UserIdService } from './UserIdService';
 
 export class RequestService {
   public constructor(
-    private readonly myIdService: UserIdService,
+    private readonly userIdService: UserIdService,
     private readonly gitHubService: GitHubService,
     private readonly gateway: Gateway
   ) {}
 
   public async submitRequest(imdbIdOrImdbUrl: string): Promise<T.SubmitRequestOutput> {
-    const userId = await this.myIdService.getMyId();
+    const userId = await this.userIdService.getMyId();
     const imdbId = this.parseImdbIdOrUrl(imdbIdOrImdbUrl);
 
     if (imdbId === null) return { code: 'INVALID_INPUT' };
@@ -27,6 +27,15 @@ export class RequestService {
 
   public getImdbQueryUrl(query: string): string {
     return `https://www.imdb.com/find/?q=${query}&s=tt&ttype=ft&ref_=subtext`;
+  }
+
+  public async updateIsOnMyList(imdbId: string, isOnMyList: boolean): Promise<void> {
+    const userId = await this.userIdService.getMyId();
+    if (isOnMyList) {
+      await this.gateway.addToMyList(userId, imdbId);
+    } else {
+      await this.gateway.removeFromMyList(userId, imdbId);
+    }
   }
 
   private parseImdbIdOrUrl(value: string) {

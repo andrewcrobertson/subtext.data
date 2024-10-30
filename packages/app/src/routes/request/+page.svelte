@@ -21,7 +21,12 @@
     requestOutput = null;
   };
 
-  const updateIsOnMyList = async (imdbId: string, isOnMyList: boolean) => {};
+  const updateIsOnMyList = async (imdbId: string, isOnMyList: boolean) => {
+    if (requestOutput?.code === 'ALREADY_EXISTS') {
+      await requestService.updateIsOnMyList(imdbId, isOnMyList);
+      requestOutput.movie.isOnMyList = isOnMyList;
+    }
+  };
 
   onMount(() => {
     const urlParams = new URLSearchParams(window.location.search);

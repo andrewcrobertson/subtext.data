@@ -74,6 +74,7 @@ export class Gateway implements T.Gateway {
         if (output.length >= maxMovies) break;
       }
 
+      if (idx >= page.pageCount) break;
       idx++;
     }
 
