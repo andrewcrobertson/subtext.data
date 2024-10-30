@@ -1,4 +1,5 @@
 <script lang="ts">
+  let _class = '';
   import { base } from '$app/paths';
   import XMarkIcon from '$lib/ui.icons/XMarkIcon.svelte';
   import PlayIcon from '$lib/ui.icons/PlayIcon.svelte';
@@ -6,6 +7,8 @@
   import { formatRunTime, formatTextArray, formatRated, formatReleaseYear } from '$lib/ui.utils/format';
   import { createEventDispatcher } from 'svelte';
   import * as T from './types';
+  import { twMerge } from 'tailwind-merge';
+  export { _class as class };
   export let movie: T.Movie;
   export let mode: T.Mode;
 
@@ -22,7 +25,7 @@
   };
 </script>
 
-<div class="flex w-full h-full bg-gray-800">
+<div class={twMerge('flex w-full h-full bg-gray-800', _class)}>
   <div class="w-1/2">
     {#if mode === T.Mode.Play}
       <a href={`${base}/watch/${movie.imdbId}`} class="w-1/2">

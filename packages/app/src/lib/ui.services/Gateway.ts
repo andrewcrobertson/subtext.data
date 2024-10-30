@@ -2,6 +2,7 @@ import { convertSubtitles } from '$lib/isomorphic.utils/convertSubtitles';
 import { compact, filter, includes, lowerCase, map } from 'lodash-es';
 import type { Api } from './Api.types';
 import type * as T from './Gateway.types';
+import type { ImageLoader } from './ImageLoader';
 import type { MyListMovieIdManager } from './MyListMovieIdManager';
 
 export class Gateway implements T.Gateway {
@@ -10,7 +11,8 @@ export class Gateway implements T.Gateway {
     private readonly showNRecentMovies: number,
     private readonly searchNRecentMovies: number,
     private readonly api: Api,
-    private readonly myListMovieIdManager: MyListMovieIdManager
+    private readonly myListMovieIdManager: MyListMovieIdManager,
+    private readonly imageLoader: ImageLoader
   ) {}
 
   public async getRecentMovies(): Promise<T.GetRecentMoviesOutput[]> {
@@ -89,6 +91,7 @@ export class Gateway implements T.Gateway {
     const myListMovieIds = await this.myListMovieIdManager.get();
     const isOnMyList = includes(myListMovieIds, movie.imdbId);
 
+    await this.preloadImage(posterUrl);
     return { posterUrl, subtitleCount, isOnMyList, ...rest };
   }
 
@@ -107,5 +110,13 @@ export class Gateway implements T.Gateway {
     if (posterFileName === null) return null;
     const posterUrl = `${this.baseUrl}/movies/${imdbId}/${posterFileName}`;
     return posterUrl;
+  }
+
+  private async preloadImage(url: string | null) {
+    if (url !== null) {
+      try {
+        await this.imageLoader.load(url);
+      } catch {}
+    }
   }
 }

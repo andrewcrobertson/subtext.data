@@ -14,13 +14,15 @@ export class RequestService {
     const userId = await this.myIdService.getMyId();
     const imdbId = this.parseImdbIdOrUrl(imdbIdOrImdbUrl);
 
-    if (imdbId === null) return { success: false };
+    if (imdbId === null) return { code: 'INVALID_INPUT' };
 
     const movie = await this.gateway.getMovie(imdbId);
-    if (movie !== null) return { success: true };
+    if (movie !== null) return { code: 'ALREADY_EXISTS', movie };
 
     const success = await this.gitHubService.submitAddMovieRequestIssue(userId, imdbId);
-    return { success };
+    if (success) return { code: 'REQUEST_SUBMITTED' };
+
+    return { code: 'UNEXPECTED_ERROR' };
   }
 
   public getImdbQueryUrl(query: string): string {
