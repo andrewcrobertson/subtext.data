@@ -79,7 +79,7 @@
   onMount(async () => {
     const loadRes = await watchService.load($page.params.id);
     title = loadRes.movie.title;
-    subtitleStream = new SubtitleStream(loadRes.movie.subtitles);
+    subtitleStream = new SubtitleStream(loadRes.movie.subtitles[0].frames);
     showControls();
     scheduleShowOverlay();
     setInterval(() => handleInterval(), 100);

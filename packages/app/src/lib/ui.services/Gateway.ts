@@ -53,11 +53,9 @@ export class Gateway implements T.Gateway {
     const movie = await this.api.getMovie(imdbId);
     if (movie === null || !movie.isAvailable || movie.subtitleIds.length === 0) return null;
 
-    const subtitle = await this.api.getSubtitle(imdbId, movie.subtitleIds[0]);
-    if (subtitle === null) return null;
+    const subtitlesRaw = await Promise.all(map(movie.subtitleIds, (subtitleId) => this.getSubtitles(imdbId, subtitleId)));
+    const subtitles = compact(subtitlesRaw);
 
-    const subtitleFile = await this.api.getSubtitleFile(imdbId, subtitle.subtitleId, subtitle.subtextFileName);
-    const subtitles = convertSubtitles(subtitleFile ?? '');
     const { title, runTime } = movie;
     return { imdbId, title, runTime, subtitles };
   }
@@ -92,6 +90,17 @@ export class Gateway implements T.Gateway {
     const isOnMyList = includes(myListMovieIds, movie.imdbId);
 
     return { posterUrl, subtitleCount, isOnMyList, ...rest };
+  }
+
+  private async getSubtitles(imdbId: string, subtitleId: string) {
+    const subtitleMeta = await this.api.getSubtitle(imdbId, subtitleId);
+    if (subtitleMeta === null) return null;
+
+    const { zipFileName, subtitleFileName, subtextFileName, ...rest } = subtitleMeta;
+    const subtitleFile = await this.api.getSubtitleFile(imdbId, subtitleId, subtextFileName);
+    const frames = convertSubtitles(subtitleFile ?? '');
+
+    return { ...rest, frames };
   }
 
   private getPosterUrl(imdbId: string, posterFileName: string | null) {

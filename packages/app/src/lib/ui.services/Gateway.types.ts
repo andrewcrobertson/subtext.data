@@ -70,10 +70,17 @@ export interface GetMovieWithSubtitlesOutput {
   imdbId: string;
   title: string;
   runTime: number | null;
-  subtitles: SubtitleBlock[];
+  subtitles: GetMovieWithSubtitlesOutputSubtitle[];
 }
 
-export interface SubtitleBlock {
+export interface GetMovieWithSubtitlesOutputSubtitle {
+  subtitleId: string;
+  source: string;
+  author: string;
+  frames: GetMovieWithSubtitlesOutputSubtitleFrame[];
+}
+
+export interface GetMovieWithSubtitlesOutputSubtitleFrame {
   start: number;
   end: number;
   text: string;
